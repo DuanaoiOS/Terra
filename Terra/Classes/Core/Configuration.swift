@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Moya
 
 /// User-defined
 public final class Configuration {
@@ -28,6 +29,8 @@ public final class Configuration {
     public internal(set) var signer: Signer?
     
     public internal(set) var serverResponse: ServerResponse = DefaultServerResponse()
+    
+    public internal(set) var plugins: [PluginType] = [SignaturePlugin(), DNSPlugin(), ServerResponsePlugin()]
     
     public func setup(errorLauncher: ErrorLauncher? = nil,
                       specialHandler: SpecialHandler? = nil,

@@ -19,9 +19,8 @@ extension MoyaProvider: TerraCompatible {}
 // MARK: Convenience Adapter
 
 extension TargetType {
-    public static func adapter(plugins: [PluginType] = []) -> MoyaProvider<Self> {
-        let allPlugins: [PluginType] = [SignaturePlugin(), DNSPlugin(), ServerResponsePlugin()] + plugins
-        return MoyaProvider<Self>(plugins: allPlugins)
+    public static func adapter(plugins: [PluginType] = Configuration.default.plugins) -> MoyaProvider<Self> {
+        return MoyaProvider<Self>(plugins: plugins)
     }
 }
 

@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-final class ServerResponsePlugin: PluginType {
+public final class ServerResponsePlugin: PluginType {
     
     public func process(_ result: Result<Response, MoyaError>, target: TargetType) -> Result<Response, MoyaError> {
         switch result {

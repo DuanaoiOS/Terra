@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-final class DNSPlugin: PluginType {
+public final class DNSPlugin: PluginType {
 
     public func prepare(_ request: URLRequest, target: TargetType) -> URLRequest {
         return parseDNS(forRequest: request)
