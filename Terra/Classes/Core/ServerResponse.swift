@@ -15,15 +15,15 @@ public protocol ServerResponse {
     var successCodeValue: Int {get set}
 }
 
-public struct DefaultServerResponse: ServerResponse {
+struct DefaultServerResponse: ServerResponse {
     
-    public var codeKey: String = "code"
+    var codeKey: String = "code"
     
-    public var messageKey: String = "msg"
+    var messageKey: String = "msg"
     
-    public var messageTypeKey: String = "msgType"
+    var messageTypeKey: String = "msgType"
     
-    public var bodyKey: String = "data"
+    var bodyKey: String = "data"
     
-    public var successCodeValue: Int = 0
+    var successCodeValue: Int = 0
 }

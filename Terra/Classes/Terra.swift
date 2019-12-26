@@ -60,10 +60,12 @@ extension Terra where Base: MoyaProviderType {
                     let keyPath = keyPath.keyPath
                     let model = try (keyPath.isEmpty ? response.mapObject(T.self) : response.mapObject(T.self, atKeyPath: keyPath))
                     completion(.success(model))
-                } catch MoyaError.jsonMapping {
-                    completion(.failure(MoyaError.jsonMapping(response)))
                 } catch {
-                    completion(.failure(.underlying(error, response)))
+                    if error is MoyaError {
+                        completion(.failure(error as! MoyaError))
+                    } else {
+                        completion(.failure(.underlying(error, response)))
+                    }
                 }
             case .failure(let error):
                 completion(.failure(error))
@@ -84,10 +86,12 @@ extension Terra where Base: MoyaProviderType {
                     let keyPath = keyPath.keyPath
                     let modelList = try (keyPath.isEmpty ? response.mapArray(T.self) : response.mapArray(T.self, atKeyPath: keyPath))
                     completion(.success(modelList))
-                } catch MoyaError.jsonMapping {
-                    completion(.failure(MoyaError.jsonMapping(response)))
                 } catch {
-                    completion(.failure(.underlying(error, response)))
+                    if error is MoyaError {
+                        completion(.failure(error as! MoyaError))
+                    } else {
+                        completion(.failure(.underlying(error, response)))
+                    }
                 }
             case .failure(let error):
                 completion(.failure(error))
@@ -107,12 +111,15 @@ public extension Reactive where Base: MoyaProviderType {
         if !keyPath.keyPath.isEmpty {
             return request(token, callbackQueue: callbackQueue)
                 .asObservable()
-                .mapObject(T.self,
-                           atKeyPath: keyPath.keyPath)
+                .takeLast(1)
+                .mapObject(T.self, atKeyPath: keyPath.keyPath)
+                .observeOn(MainScheduler.instance)
         }
         return request(token, callbackQueue: callbackQueue)
             .asObservable()
+            .takeLast(1)
             .mapObject(T.self)
+            .observeOn(MainScheduler.instance)
     }
     
     func requestModelList<T: BaseMappable>(_ token: Base.Target,
@@ -121,12 +128,15 @@ public extension Reactive where Base: MoyaProviderType {
         if !keyPath.keyPath.isEmpty {
             return request(token, callbackQueue: callbackQueue)
                 .asObservable()
-                .mapArray(T.self,
-                          atKeyPath: keyPath.keyPath)
+                .takeLast(1)
+                .mapArray(T.self, atKeyPath: keyPath.keyPath)
+                .observeOn(MainScheduler.instance)
         }
         return request(token, callbackQueue: callbackQueue)
             .asObservable()
+            .takeLast(1)
             .mapArray(T.self)
+            .observeOn(MainScheduler.instance)
     }
     
     //  Single
@@ -136,11 +146,18 @@ public extension Reactive where Base: MoyaProviderType {
                                        callbackQueue: DispatchQueue? = nil) -> Single<T> {
         if !keyPath.keyPath.isEmpty {
             return request(token, callbackQueue: callbackQueue)
-                .mapObject(T.self,
-                           atKeyPath: keyPath.keyPath)
+                .asObservable()
+                .takeLast(1)
+                .mapObject(T.self, atKeyPath: keyPath.keyPath)
+                .observeOn(MainScheduler.instance)
+                .asSingle()
         }
         return request(token, callbackQueue: callbackQueue)
+            .asObservable()
+            .takeLast(1)
             .mapObject(T.self)
+            .observeOn(MainScheduler.instance)
+            .asSingle()
     }
     
     func requestModelList<T: BaseMappable>(_ token: Base.Target,
@@ -148,10 +165,17 @@ public extension Reactive where Base: MoyaProviderType {
                                            callbackQueue: DispatchQueue? = nil) -> Single<[T]> {
         if !keyPath.keyPath.isEmpty {
             return request(token, callbackQueue: callbackQueue)
-                .mapArray(T.self,
-                          atKeyPath: keyPath.keyPath)
+                .asObservable()
+                .takeLast(1)
+                .mapArray(T.self, atKeyPath: keyPath.keyPath)
+                .observeOn(MainScheduler.instance)
+                .asSingle()
         }
         return request(token, callbackQueue: callbackQueue)
+            .asObservable()
+            .takeLast(1)
             .mapArray(T.self)
+            .observeOn(MainScheduler.instance)
+            .asSingle()
     }
 }
