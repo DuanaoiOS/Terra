@@ -143,38 +143,14 @@ public extension Reactive where Base: MoyaProviderType {
     func requestModel<T: BaseMappable>(_ token: Base.Target,
                                        keyPath: BodyKeyPath = .default,
                                        callbackQueue: DispatchQueue? = nil) -> Single<T> {
-        if !keyPath.keyPath.isEmpty {
-            return request(token, callbackQueue: callbackQueue)
-                .asObservable()
-                .takeLast(1)
-                .mapObject(T.self, atKeyPath: keyPath.keyPath)
-                .observeOn(MainScheduler.instance)
-                .asSingle()
-        }
-        return request(token, callbackQueue: callbackQueue)
-            .asObservable()
-            .takeLast(1)
-            .mapObject(T.self)
-            .observeOn(MainScheduler.instance)
+        return requestModel(token, keyPath: keyPath, callbackQueue: callbackQueue)
             .asSingle()
     }
     
     func requestModelList<T: BaseMappable>(_ token: Base.Target,
                                            keyPath: BodyKeyPath = .default,
                                            callbackQueue: DispatchQueue? = nil) -> Single<[T]> {
-        if !keyPath.keyPath.isEmpty {
-            return request(token, callbackQueue: callbackQueue)
-                .asObservable()
-                .takeLast(1)
-                .mapArray(T.self, atKeyPath: keyPath.keyPath)
-                .observeOn(MainScheduler.instance)
-                .asSingle()
-        }
-        return request(token, callbackQueue: callbackQueue)
-            .asObservable()
-            .takeLast(1)
-            .mapArray(T.self)
-            .observeOn(MainScheduler.instance)
+        return requestModelList(token, keyPath: keyPath, callbackQueue: callbackQueue)
             .asSingle()
     }
 }
