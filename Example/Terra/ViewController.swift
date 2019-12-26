@@ -9,9 +9,11 @@
 import UIKit
 import Terra
 import Moya
+import ObjectMapper
 
 enum API {
-    case one
+    case login(account: String, password: String)
+    case logout(account: String)
 }
 
 extension API: TargetType {
@@ -20,15 +22,16 @@ extension API: TargetType {
     }
     
     var path: String {
-        return ""
+        switch self {
+        case .login:
+            return "/account/login"
+        case .logout:
+            return "/account/logout"
+        }
     }
     
     var method: Moya.Method {
         return .post
-    }
-    
-    var sampleData: Data {
-        return Data()
     }
     
     var task: Moya.Task {
@@ -40,18 +43,30 @@ extension API: TargetType {
     }
 }
 
+struct Account: ImmutableMappable {
+    var userID: String
+    var name: String?
+    
+    init(map: Map) throws {
+        userID = try map.value("id")
+        name = try? map.value("name")
+    }
+}
+
 class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        API.adapter()
+    
+    lazy var provider = API.adapter()
+    
+    private func fetchData() {
+        provider.te.requestModel(.logout(account: "xx")) { (result: Result<Account, MoyaError>) in
+            switch result {
+            case .success(let account):
+                print(account.toJSON().debugDescription)
+            case .failure(let error):
+                // Reload UI with account
+                error.show()
+            }
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 }
 

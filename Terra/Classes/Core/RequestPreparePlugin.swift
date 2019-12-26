@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-/// 用于配置URLRequest
+/// URLRequest of Custom-ized
 public final class RequestPreparePlugin: PluginType {
 
     public typealias RequestPrepareClosure = (_ request: URLRequest, _ target: TargetType) -> URLRequest
@@ -18,7 +18,7 @@ public final class RequestPreparePlugin: PluginType {
         self.requestPrepareClosure = requestPrepareClosure
     }
 
-    // MARK: 修改发送请求
+    // MARK: Called to modify a request before sending
     public func prepare(_ request: URLRequest, target: TargetType) -> URLRequest {
         return requestPrepareClosure(request, target)
     }

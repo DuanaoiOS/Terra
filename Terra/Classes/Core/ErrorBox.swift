@@ -8,19 +8,18 @@
 import Foundation
 import Moya
 
-
-/// 消息显示类型
+/// Display type of Error Message
 ///
-/// - toast: 用Toast显示
-/// - dialog: 用AlertView显示
-/// - none: 不显示
+/// - toast: Toast
+/// - dialog: AlertView
+/// - none: No display
 public enum ErrorPresentType: String {
     case toast = "T"
     case dialog = "D"
     case none = "N"
 }
 
-/// 服务端错误内容
+/// Content of Server's Errror
 public struct ServerErrorContent {
     public var code: Int
     public var message: String?
@@ -38,7 +37,7 @@ public struct ServerErrorContent {
     }
 }
 
-/// 业务错误类型
+/// Enum of business error
 public enum BusinessError: Swift.Error {
     case server(content: ServerErrorContent)
 }
@@ -68,7 +67,7 @@ extension BusinessError {
     }
     
     public var localizedDescription: String {
-        return content.message ?? "发生错误：\(content.code)"
+        return content.message ?? "error occurred:\(content.code)"
     }
 }
 
@@ -83,7 +82,7 @@ extension MoyaError {
     }
 }
 
-// 错误显示
+// extension of display error
 extension MoyaError {
     public func show() {
         let messgae = localizedDescription

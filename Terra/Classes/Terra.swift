@@ -10,20 +10,23 @@ import Moya
 import ObjectMapper
 import RxSwift
 
+// MARK: Typealias Of Completion
 public typealias TerraModelCompletion<T: BaseMappable> = (_ result: Result<T, MoyaError>) -> Void
 public typealias TerraModelListCompletion<T: BaseMappable> = (_ result: Result<[T], MoyaError>) -> Void
 
 extension MoyaProvider: TerraCompatible {}
 
-// MARK: 获取网络适配器
+// MARK: Convenience Adapter
+
 extension TargetType {
     public static func adapter(plugins: [PluginType] = []) -> MoyaProvider<Self> {
-        let allPlugins: [PluginType] = [SignaturePlugin(), DNSPlugin(), BusinessErrorPlugin()] + plugins
+        let allPlugins: [PluginType] = [SignaturePlugin(), DNSPlugin(), ServerResponsePlugin()] + plugins
         return MoyaProvider<Self>(plugins: allPlugins)
     }
 }
 
-/// 解析Response的Body路径
+// MARK: Keypath of Response Body:  JSON to Model
+
 public enum BodyKeyPath {
     
     case `default`
@@ -32,16 +35,18 @@ public enum BodyKeyPath {
     var keyPath: String {
         switch self {
         case .default:
-            return Configuration.default.responseBodyKeyPath
+            return Configuration.default.serverResponse.bodyKey
         case .custom(let keyPath):
             return keyPath
         }
     }
 }
 
-// MARK: 扩展请求方法
+// MARK: Terra Extensions Of Request
+
 extension Terra where Base: MoyaProviderType {
     
+    @discardableResult
     public func requestModel<T: BaseMappable>(_ target: Base.Target,
                                               keyPath: BodyKeyPath = .default,
                                               callbackQueue: DispatchQueue? = nil,
@@ -66,6 +71,7 @@ extension Terra where Base: MoyaProviderType {
         }
     }
     
+    @discardableResult
     public func requestModelList<T: BaseMappable>(_ target: Base.Target,
                                                    keyPath: BodyKeyPath = .default,
                                                    callbackQueue: DispatchQueue? = nil,
@@ -90,10 +96,10 @@ extension Terra where Base: MoyaProviderType {
     }
 }
 
-// Rx 扩展
+// MARK: Rx Extensions Of Request
 public extension Reactive where Base: MoyaProviderType {
     
-    // MARK: Observable
+    //  Observable
     
     func requestModel<T: BaseMappable>(_ token: Base.Target,
                                        keyPath: BodyKeyPath = .default,
@@ -123,7 +129,7 @@ public extension Reactive where Base: MoyaProviderType {
             .mapArray(T.self)
     }
     
-    // MARK: Single
+    //  Single
     
     func requestModel<T: BaseMappable>(_ token: Base.Target,
                                        keyPath: BodyKeyPath = .default,

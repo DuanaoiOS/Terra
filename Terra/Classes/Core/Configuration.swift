@@ -7,21 +7,19 @@
 
 import Foundation
 
-/// 使用初始配置类
+/// User-defined
 public final class Configuration {
-    
-    static let defaultResultKeyPath = "data"
-    
+        
     public static let `default`: Configuration = Configuration()
     private init() {}
     
-    /// 错误信息展示处理
+    /// Display error
     public typealias ErrorLauncher = (_ message: String, _ messageType: ErrorPresentType) -> Void
-    /// 特殊错误处理
+    /// Special error code handle
     public typealias SpecialHandler = (BusinessError) -> Void
-    /// dns解析处理
+    /// DNS parser
     public typealias DNSParser = (_ host: String) -> String
-    /// 请求参数签名
+    /// Signature
     public typealias Signer = ((_ signData: Data) -> (String?))
     
     public internal(set) var errorLauncher: ErrorLauncher?
@@ -29,19 +27,19 @@ public final class Configuration {
     public internal(set) var dnsParser: DNSParser?
     public internal(set) var signer: Signer?
     
-    public internal(set) var responseBodyKeyPath = Configuration.defaultResultKeyPath
+    public internal(set) var serverResponse: ServerResponse = DefaultServerResponse()
     
     public func setup(errorLauncher: ErrorLauncher? = nil,
                       specialHandler: SpecialHandler? = nil,
                       dnsParser: DNSParser? = nil,
                       signer: Signer? = nil,
-                      responseBodyKeyPath: String? = nil) {
+                      serverResponse: ServerResponse? = nil) {
         self.errorLauncher = errorLauncher
         self.specialHandler = specialHandler
         self.dnsParser = dnsParser
         self.signer = signer
-        if let keyPath = responseBodyKeyPath {
-            self.responseBodyKeyPath = keyPath
+        if let response = serverResponse {
+            self.serverResponse = response
         }
     }
 }
