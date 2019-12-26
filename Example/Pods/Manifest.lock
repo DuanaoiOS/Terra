@@ -1,0 +1,56 @@
+PODS:
+  - Alamofire (4.9.1)
+  - Moya (13.0.1):
+    - Moya/Core (= 13.0.1)
+  - Moya/Core (13.0.1):
+    - Alamofire (~> 4.1)
+    - Result (~> 4.1)
+  - Moya/ReactiveSwift (13.0.1):
+    - Moya/Core
+    - ReactiveSwift (~> 5.0)
+  - Moya/RxSwift (13.0.1):
+    - Moya/Core
+    - RxSwift (~> 4.0)
+  - ObjectMapper (3.5.1)
+  - ReactiveSwift (5.0.1):
+    - Result (~> 4.1)
+  - Result (4.1.0)
+  - RxSwift (4.5.0)
+  - SwiftyJSON (5.0.0)
+  - Terra (0.0.1):
+    - Moya (~> 13.0)
+    - Moya/ReactiveSwift (~> 13.0)
+    - Moya/RxSwift (~> 13.0)
+    - ObjectMapper
+    - SwiftyJSON
+
+DEPENDENCIES:
+  - Terra (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - Moya
+    - ObjectMapper
+    - ReactiveSwift
+    - Result
+    - RxSwift
+    - SwiftyJSON
+
+EXTERNAL SOURCES:
+  Terra:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
+  ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
+  ReactiveSwift: cac20a5bbe560c5806bd29c0fccf90d03b996ac1
+  Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
+  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
+  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
+  Terra: 1979d6801c139a4274eca6bae8382e4157cd31f4
+
+PODFILE CHECKSUM: df344328b00c8ba4eb238e83d41cdaecdca31f4c
+
+COCOAPODS: 1.8.4

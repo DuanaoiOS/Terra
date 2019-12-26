@@ -1,0 +1,39 @@
+{
+  "name": "Terra",
+  "version": "0.0.1",
+  "summary": "网络层框架",
+  "description": "基于Moya扩展的网络组件",
+  "homepage": "http://47.244.69.238/iOS/core-components/Terra",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "DATree": "aobaoaini@gmail.com"
+  },
+  "source": {
+    "git": "http://47.244.69.238/iOS/core-components/Terra.git",
+    "tag": "0.0.1"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "Terra/Classes/**/*",
+  "dependencies": {
+    "Moya": [
+      "~> 13.0"
+    ],
+    "Moya/RxSwift": [
+      "~> 13.0"
+    ],
+    "Moya/ReactiveSwift": [
+      "~> 13.0"
+    ],
+    "SwiftyJSON": [
+
+    ],
+    "ObjectMapper": [
+
+    ]
+  }
+}

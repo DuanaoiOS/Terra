@@ -1,0 +1,6 @@
+framework module Terra {
+  umbrella header "Terra-umbrella.h"
+
+  export *
+  module * { export * }
+}

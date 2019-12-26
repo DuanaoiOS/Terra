@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'Terra_Example' do
+  pod 'Terra', :path => '../'
+
+  target 'Terra_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
