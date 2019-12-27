@@ -6,24 +6,61 @@
 //
 
 import Foundation
+import Moya
 
-public protocol ServerResponse {
-    var codeKey: String {get set}
-    var messageKey: String {get set}
-    var messageTypeKey: String {get set}
-    var bodyKey: String {get set}
-    var successCodeValue: Int {get set}
+public protocol ResponsePattern {
+    var bodyKeyPath: String { get set }
+    func verifier(response: Moya.Response) -> Bool?
+    func errorContent(in reponse: Moya.Response) -> ServerErrorContent?
 }
 
-struct DefaultServerResponse: ServerResponse {
+struct DefaultResponsePattern: ResponsePattern {
     
-    var codeKey: String = "code"
+    private let codeKey: String = "code"
     
-    var messageKey: String = "msg"
+    private let messageKey: String = "msg"
     
-    var messageTypeKey: String = "msgType"
+    private let messageTypeKey: String = "msgType"
+        
+    private let successCodeValue: Int = 0
     
-    var bodyKey: String = "data"
+    var bodyKeyPath: String = "data"
     
-    var successCodeValue: Int = 0
+    func verifier(response: Response) -> Bool? {
+        guard let code = logicCode(response: response) else { return nil }
+        return code == successCodeValue
+    }
+    
+    func errorContent(in response: Response) -> ServerErrorContent? {
+        guard let code = logicCode(response: response), code != successCodeValue else { return nil }
+        let content = ServerErrorContent(code: code,
+                                         message: message(response: response),
+                                         messageType: messageType(response: response),
+                                         response: response)
+        return content
+    }
+    
+    // MARK: Private
+    
+    private func logicCode(response: Response) -> Int? {
+        let codeValue = response.dataJSON?[codeKey].object
+        if let intValue = codeValue as? Int {
+            return intValue
+        } else if let stringValue = codeValue as? String {
+            return Int(stringValue)
+        }
+        return nil
+    }
+    
+    private func message(response: Response) -> String? {
+        return response.dataJSON?[messageKey].object as? String
+    }
+    
+    private func messageType(response: Response) -> ServerErrorContent.MessageType? {
+        if let message = response.dataJSON?[messageTypeKey].object as? String,
+            let messageType = ServerErrorContent.MessageType(rawValue: message) {
+            return messageType
+        }
+        return nil
+    }
 }

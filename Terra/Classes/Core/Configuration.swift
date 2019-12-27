@@ -15,7 +15,7 @@ public final class Configuration {
     private init() {}
     
     /// Display error
-    public typealias ErrorLauncher = (_ message: String, _ messageType: ErrorPresentType) -> Void
+    public typealias ErrorLauncher = (_ message: String, _ messageType: ServerErrorContent.MessageType?) -> Void
     /// Special error code handle
     public typealias SpecialHandler = (BusinessError) -> Void
     /// DNS parser
@@ -28,7 +28,7 @@ public final class Configuration {
     public internal(set) var dnsParser: DNSParser?
     public internal(set) var signer: Signer?
     
-    public internal(set) var serverResponse: ServerResponse = DefaultServerResponse()
+    public internal(set) var serverResponse: ResponsePattern = DefaultResponsePattern()
     
     public internal(set) var plugins: [PluginType] = [SignaturePlugin(), DNSPlugin(), ServerResponsePlugin()]
     
@@ -36,7 +36,7 @@ public final class Configuration {
                       specialHandler: SpecialHandler? = nil,
                       dnsParser: DNSParser? = nil,
                       signer: Signer? = nil,
-                      serverResponse: ServerResponse? = nil) {
+                      serverResponse: ResponsePattern? = nil) {
         self.errorLauncher = errorLauncher
         self.specialHandler = specialHandler
         self.dnsParser = dnsParser

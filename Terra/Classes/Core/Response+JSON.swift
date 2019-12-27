@@ -11,42 +11,24 @@ import SwiftyJSON
 
 public extension Moya.Response {
     
-    internal var codeKey: String {
-        return Configuration.default.serverResponse.codeKey
-    }
-    
-    internal var msgKey: String {
-        return Configuration.default.serverResponse.messageKey
-    }
-    
-    internal var msgTypeKey: String {
-        return Configuration.default.serverResponse.messageTypeKey
+    internal var responsePattern: ResponsePattern {
+        return Configuration.default.serverResponse
     }
     
     internal var bodyKey: String {
-        return Configuration.default.serverResponse.bodyKey
+        return responsePattern.bodyKeyPath
     }
     
     internal var logicCode: Int? {
-        let codeValue = dataJSON?[codeKey].object
-        if let intValue = codeValue as? Int {
-            return intValue
-        } else if let stringValue = codeValue as? String {
-            return Int(stringValue)
-        }
-        return nil
+        return responsePattern.errorContent(in: self)?.code
     }
     
     internal var message: String? {
-        return dataJSON?[msgKey].object as? String
+        return responsePattern.errorContent(in: self)?.message
     }
     
-    internal var messageType: ErrorPresentType? {
-        if let message = dataJSON?[msgTypeKey].object as? String,
-            let messageType = ErrorPresentType(rawValue: message) {
-            return messageType
-        }
-        return nil
+    internal var messageType: ServerErrorContent.MessageType? {
+        return responsePattern.errorContent(in: self)?.messageType
     }
     
     var bodyDictionaryObject: [String: Any]? {
@@ -57,7 +39,7 @@ public extension Moya.Response {
         return dataJSON?[bodyKey].arrayObject
     }
     
-    private var dataJSON: JSON? {
+    internal var dataJSON: JSON? {
         do {
             let json = try JSON(data: data)
             return json

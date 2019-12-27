@@ -62,9 +62,9 @@ class ViewController: UIViewController {
             switch result {
             case .success(let account):
                 print(account.toJSON().debugDescription)
-            case .failure(let error):
                 // Reload UI with account
-                error.show()
+            case .failure(let error):
+                error.display()
             }
         }
     }

@@ -8,27 +8,27 @@
 import Foundation
 import Moya
 
-/// Display type of Error Message
-///
-/// - toast: Toast
-/// - dialog: AlertView
-/// - none: No display
-public enum ErrorPresentType: String {
-    case toast = "T"
-    case dialog = "D"
-    case none = "N"
-}
-
 /// Content of Server's Errror
 public struct ServerErrorContent {
+    /// Display type of Error Message
+    ///
+    /// - toast: Toast
+    /// - dialog: AlertView
+    /// - none: No display
+    public enum MessageType: String {
+        case toast = "T"
+        case dialog = "D"
+        case none = "N"
+    }
+
     public var code: Int
     public var message: String?
-    public var messageType: ErrorPresentType?
+    public var messageType: MessageType?
     public var response: Moya.Response?
     
     public init(code: Int,
                 message: String?,
-                messageType: ErrorPresentType?,
+                messageType: MessageType?,
                 response: Moya.Response?) {
         self.code = code
         self.message = message
@@ -58,7 +58,7 @@ extension BusinessError {
         return content.message
     }
     
-    public var messageType: ErrorPresentType {
+    public var messageType: ServerErrorContent.MessageType {
         return content.messageType ?? .none
     }
     
@@ -84,9 +84,9 @@ extension MoyaError {
 
 // extension of display error
 extension MoyaError {
-    public func show() {
+    public func display() {
         let messgae = localizedDescription
-        let messageType = businessError?.messageType ?? .none
+        let messageType = businessError?.messageType
         Configuration.default.errorLauncher?(messgae, messageType)
     }
 }
