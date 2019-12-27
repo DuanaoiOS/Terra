@@ -84,13 +84,15 @@ class ViewController: UIViewController {
     }
     
     func login(completion: @escaping (Account) -> Void) {
-        provider.te.requestModel(Account.self, target: .login(account: "xx", password:"xx")) { (result) in
+        provider.te.requestModel(Account.self,
+                                 target: .login(account: "xx", password:"xx"))
+        { [weak self] (result) in
             switch result {
             case .success(let account):
                 print(account.toJSON().debugDescription)
                 completion(account)
             case .failure(let error):
-                error.display()
+                error.display(on: self?.view)
             }
         }
     }

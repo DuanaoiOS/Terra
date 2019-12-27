@@ -15,9 +15,9 @@ public final class Configuration {
     private init() {}
     
     /// Display error
-    public typealias MessageDisplayer = (_ message: String, _ messageType: ServerErrorContent.MessageType?) -> Void
+    public typealias MessageDisplayer = (_ message: String, _ messageType: ServerErrorContent.MessageType?, _ onView: UIView?) -> Void
     /// Special error code handle
-    public typealias ErrorHandler = (BusinessError) -> Void
+    public typealias ErrorHandler = (_ error: BusinessError) -> Void
     /// DNS parser
     public typealias DNSParser = (_ host: String) -> String
     /// Signature
