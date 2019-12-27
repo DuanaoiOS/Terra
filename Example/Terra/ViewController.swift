@@ -10,6 +10,7 @@ import UIKit
 import Terra
 import Moya
 import ObjectMapper
+import RxSwift
 
 enum API {
     case login(account: String, password: String)
@@ -35,7 +36,15 @@ extension API: TargetType {
     }
     
     var task: Moya.Task {
-        return .requestPlain
+        var parameters = [String: Any]()
+        switch self {
+        case let .login(account, password):
+            parameters["account"] = account
+            parameters["password"] = password
+        case let .logout(account):
+            parameters["account"] = account
+        }
+        return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
     }
     
     var headers: [String : String]? {
@@ -44,29 +53,50 @@ extension API: TargetType {
 }
 
 struct Account: ImmutableMappable {
+    
     var userID: String
     var name: String?
+    var phone: String?
+    var gender: Int?
     
     init(map: Map) throws {
         userID = try map.value("id")
         name = try? map.value("name")
+        phone = try? map.value("phone")
+        gender = try? map.value("gender")
     }
 }
 
 class ViewController: UIViewController {
     
-    lazy var provider = API.adapter()
+    let provider = API.adapter()
+    let disposeBag = DisposeBag()
     
     private func fetchData() {
-        provider.te.requestModel(.logout(account: "xx")) { (result: Result<Account, MoyaError>) in
+        
+        login { (account) in
+            // Reload UI with account
+        }
+        
+        login().subscribe { (event) in
+            print(event.element.debugDescription)
+        }.disposed(by: disposeBag)
+    }
+    
+    func login(completion: @escaping (Account) -> Void) {
+        provider.te.requestModel(Account.self, target: .login(account: "xx", password:"xx")) { (result) in
             switch result {
             case .success(let account):
                 print(account.toJSON().debugDescription)
-                // Reload UI with account
+                completion(account)
             case .failure(let error):
                 error.display()
             }
         }
+    }
+    
+    func login() -> Observable<Account> {
+        return provider.rx.requestModel(.login(account: "xx", password:"xx"))
     }
 }
 
