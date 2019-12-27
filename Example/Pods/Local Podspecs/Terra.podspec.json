@@ -2,7 +2,7 @@
   "name": "Terra",
   "version": "0.0.1",
   "summary": "网络层框架",
-  "description": "基于Moya扩展的网络组件",
+  "description": "基于Moya，健壮的高扩展性网络组件",
   "homepage": "http://47.244.69.238/iOS/core-components/Terra",
   "license": {
     "type": "MIT",
