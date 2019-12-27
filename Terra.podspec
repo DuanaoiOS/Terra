@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = 'Terra'
   s.version          = '0.0.1'
   s.summary          = '网络层框架'
-  s.description      = '基于Moya，健壮的高扩展性网络组件'
+  s.description      = '可灵活定制，高扩展性，基于Moya的网络组件'
 
   s.homepage         = 'http://47.244.69.238/iOS/core-components/Terra'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'

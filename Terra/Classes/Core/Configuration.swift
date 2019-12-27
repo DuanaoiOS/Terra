@@ -29,9 +29,18 @@ public final class Configuration {
     public internal(set) var signer: Signer?
     
     public internal(set) var responsePattern: ResponsePattern = DefaultResponsePattern()
-    public internal(set) var plugins: [PluginType] = [SignaturePlugin(), DNSPlugin(), ServerResponsePlugin()]
+    public internal(set) lazy var plugins: [PluginType] = [
+        SignaturePlugin(),
+        DNSPlugin(),
+        ServerResponsePlugin(),
+        RequestPreparePlugin.timeoutSettings()
+    ]
+    
+    public static let defaultTimeoutInterval: TimeInterval = 20
+    public internal(set) var timeoutIntervalForRequest = Configuration.defaultTimeoutInterval
     
     public func setup(
+                    timeoutIntervalForRequest: TimeInterval = Configuration.defaultTimeoutInterval,
                     responsePattern: ResponsePattern? = nil,
                     msgDisplayer: MessageDisplayer? = nil,
                     errorHandler: ErrorHandler? = nil,
@@ -40,6 +49,7 @@ public final class Configuration {
         if let pattern = responsePattern {
             self.responsePattern = pattern
         }
+        self.timeoutIntervalForRequest = timeoutIntervalForRequest
         self.msgDisplayer = msgDisplayer
         self.errorHandler = errorHandler
         self.dnsParser = dnsParser

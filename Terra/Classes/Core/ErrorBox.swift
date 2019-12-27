@@ -85,7 +85,7 @@ extension MoyaError {
 // extension of display error
 extension MoyaError {
     public func display(on view: UIView? = nil) {
-        let messgae = localizedDescription
+        let messgae = errorDescription ?? localizedDescription
         let messageType = businessError?.messageType
         Configuration.default.msgDisplayer?(messgae, messageType, view)
     }
