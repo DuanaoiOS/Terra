@@ -13,9 +13,9 @@ public final class ServerResponsePlugin: PluginType {
     public func process(_ result: Result<Response, MoyaError>, target: TargetType) -> Result<Response, MoyaError> {
         switch result {
         case .success(let response):
-            guard let content = Configuration.default.serverResponse.errorContent(in: response) else { return result }
+            guard let content = Configuration.default.responsePattern.errorContent(in: response) else { return result }
                 let error = BusinessError.server(content: content)
-                Configuration.default.specialHandler?(error)
+                Configuration.default.errorHandler?(error)
                 return .failure(.underlying(error, response))
         case .failure: return result
         }

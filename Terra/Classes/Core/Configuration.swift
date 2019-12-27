@@ -15,34 +15,34 @@ public final class Configuration {
     private init() {}
     
     /// Display error
-    public typealias ErrorLauncher = (_ message: String, _ messageType: ServerErrorContent.MessageType?) -> Void
+    public typealias MessageDisplayer = (_ message: String, _ messageType: ServerErrorContent.MessageType?) -> Void
     /// Special error code handle
-    public typealias SpecialHandler = (BusinessError) -> Void
+    public typealias ErrorHandler = (BusinessError) -> Void
     /// DNS parser
     public typealias DNSParser = (_ host: String) -> String
     /// Signature
-    public typealias Signer = ((_ signData: Data) -> (String?))
+    public typealias Signer = (_ signData: Data) -> String?
     
-    public internal(set) var errorLauncher: ErrorLauncher?
-    public internal(set) var specialHandler: SpecialHandler?
+    public internal(set) var msgDisplayer: MessageDisplayer?
+    public internal(set) var errorHandler: ErrorHandler?
     public internal(set) var dnsParser: DNSParser?
     public internal(set) var signer: Signer?
     
-    public internal(set) var serverResponse: ResponsePattern = DefaultResponsePattern()
-    
+    public internal(set) var responsePattern: ResponsePattern = DefaultResponsePattern()
     public internal(set) var plugins: [PluginType] = [SignaturePlugin(), DNSPlugin(), ServerResponsePlugin()]
     
-    public func setup(errorLauncher: ErrorLauncher? = nil,
-                      specialHandler: SpecialHandler? = nil,
-                      dnsParser: DNSParser? = nil,
-                      signer: Signer? = nil,
-                      serverResponse: ResponsePattern? = nil) {
-        self.errorLauncher = errorLauncher
-        self.specialHandler = specialHandler
+    public func setup(
+                    responsePattern: ResponsePattern? = nil,
+                    msgDisplayer: MessageDisplayer? = nil,
+                    errorHandler: ErrorHandler? = nil,
+                    dnsParser: DNSParser? = nil,
+                    signer: Signer? = nil) {
+        if let pattern = responsePattern {
+            self.responsePattern = pattern
+        }
+        self.msgDisplayer = msgDisplayer
+        self.errorHandler = errorHandler
         self.dnsParser = dnsParser
         self.signer = signer
-        if let response = serverResponse {
-            self.serverResponse = response
-        }
     }
 }

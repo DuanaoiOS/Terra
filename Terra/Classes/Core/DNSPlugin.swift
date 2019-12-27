@@ -11,10 +11,10 @@ import Moya
 public final class DNSPlugin: PluginType {
 
     public func prepare(_ request: URLRequest, target: TargetType) -> URLRequest {
-        return parseDNS(forRequest: request)
+        return parseDNS(for: request)
     }
     
-    private func parseDNS(forRequest request: URLRequest) -> URLRequest {
+    private func parseDNS(for request: URLRequest) -> URLRequest {
         var targetRequest = request
         if let originalHost = request.url?.host,
             let ip = Configuration.default.dnsParser?(originalHost) {

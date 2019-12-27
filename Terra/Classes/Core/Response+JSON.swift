@@ -12,7 +12,7 @@ import SwiftyJSON
 public extension Moya.Response {
     
     internal var responsePattern: ResponsePattern {
-        return Configuration.default.serverResponse
+        return Configuration.default.responsePattern
     }
     
     internal var bodyKey: String {

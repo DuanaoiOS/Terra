@@ -87,6 +87,6 @@ extension MoyaError {
     public func display() {
         let messgae = localizedDescription
         let messageType = businessError?.messageType
-        Configuration.default.errorLauncher?(messgae, messageType)
+        Configuration.default.msgDisplayer?(messgae, messageType)
     }
 }
