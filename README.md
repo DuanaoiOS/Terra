@@ -27,7 +27,7 @@ pod 'Terra'
 
 ### 快速使用
 
-1. 定义一个API类型，推荐使用Enum
+* 定义一个API类型，推荐使用Enum
 
 ```swift
 enum AccountAPI {
@@ -36,7 +36,7 @@ enum AccountAPI {
 }
 ```
 
-2. 进行请求配置，扩展API类型，实现TargetType 协议。
+* 进行请求配置，扩展API类型，实现TargetType 协议。
 
 ```swift
 extension AccountAPI: TargetType {
@@ -76,7 +76,7 @@ extension AccountAPI: TargetType {
 }
 ```
 
-3. 初始化一个`MoyaProvider`,   **Terra** 可以通过`TargetType`适配器方法获取Provider实例， 默认提供了相关解析插件
+* 初始化一个`MoyaProvider`,   **Terra** 可以通过`TargetType`适配器方法获取Provider实例， 默认提供了相关解析插件
 
 ```swift
 let provider = AccountAPI.adapter()
@@ -88,7 +88,7 @@ let provider = AccountAPI.adapter()
 let provider = MoyaProvider<AccountAPI>()
 ```
 
-4. 定义数据模型 ，**Terra**支持了`BaseMappable`以及`Codable`类型的自动解析
+* 定义数据模型 ，**Terra**支持了`BaseMappable`以及`Codable`类型的自动解析
 
 ```swift
 struct Account: ImmutableMappable {
@@ -107,7 +107,7 @@ struct Account: ImmutableMappable {
 }
 ```
 
-5. 使用`provider`进行网络请求，**Terra**支持Callback和Rx的方式
+* 使用`provider`进行网络请求，**Terra**支持Callback和Rx的方式
 
 ```swift
 // Callback 
@@ -143,7 +143,7 @@ login().subscribe(onNext: { (account) in
 
 
 
-### 高级用法
+### 进阶用法
 
 使用**Terra**适配器获取的Provider实例， 默认配置了DNS解析/Params签名/业务错误码解析/请求超时等插件支持
 
@@ -285,7 +285,7 @@ Configuration.te.setup(timeoutIntervalForRequest: 20,
 
 #### 插件
 
-1. 请求自定义插件：支持在请求发送之前修改URLRequest
+* 请求自定义插件：支持在请求发送之前修改URLRequest
 
 ```swift
 /// URLRequest of Custom-ized
@@ -305,7 +305,7 @@ public final class RequestPreparePlugin: PluginType {
 }
 ```
 
-2. 响应修改插件：支持在完成回调之前修改响应结果
+* 响应修改插件：支持在完成回调之前修改响应结果
 
 ```swift
 /// Result Modifier
