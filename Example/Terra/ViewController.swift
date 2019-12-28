@@ -108,7 +108,7 @@ class ViewController: UIViewController {
     }
     
     func login(completion: @escaping (Account) -> Void) {
-        provider.te.requestModel(Account.self,
+        provider.terra.requestModel(Account.self,
                                  target: .login(account: "xx", password:"xx"))
         { [weak self] (result) in
             switch result {

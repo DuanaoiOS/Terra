@@ -115,7 +115,7 @@ struct Account: ImmutableMappable {
 
 ```swift
 // Callback 
-provider.te.requestModel(Account.self,
+provider.terra.requestModel(Account.self,
                                  target: .login(account: "xx", password:"xx"))
         { [weak self] (result) in
             switch result {
@@ -178,7 +178,7 @@ public func setup(dnsParser: @escaping DNSParser) {
     self.dnsParser = dnsParser
 }
 // 配置解析逻辑
-Configuration.te.setup { (host) -> String in
+Configuration.terra.setup { (host) -> String in
     // 返回host对应的ip 
 }
 ```
@@ -193,7 +193,7 @@ public func setup(signer: @escaping Signer) {
     self.signer = signer
 }
 // 配置签名逻辑
-Configuration.te.setup { (signData) -> String? in
+Configuration.terra.setup { (signData) -> String? in
     // 返回签名后的字符串 
 }
 ```
@@ -208,7 +208,7 @@ public static func setup(errorHandler: @escaping Configuration.ErrorHandler) {
     Configuration.default.errorHandler = errorHandler
 }
 // 配置处理逻辑
-Configuration.te.setup { (error) in
+Configuration.terra.setup { (error) in
     // 处理错误 
 }
 ```
@@ -225,7 +225,7 @@ public static func setup(messageDisplayer: @escaping Configuration.MessageDispla
     Configuration.default.msgDisplayer = messageDisplayer
 }
 // 配置错误展示逻辑
-Configuration.te.setup { (msg, msgType, onView) in
+Configuration.terra.setup { (msg, msgType, onView) in
     // 根据错误类型展示
 }
 ```
@@ -273,7 +273,7 @@ struct DefaultResponsePattern: ResponsePattern {
 public static func setup(timeoutIntervalForRequest: TimeInterval) {
     Configuration.default.timeoutIntervalForRequest = timeoutIntervalForRequest
 }
-Configuration.te.setup(timeoutIntervalForRequest: 30)
+Configuration.terra.setup(timeoutIntervalForRequest: 30)
 
 // 2 - Plugin
 let requestPlugin = RequestPreparePlugin { (urlRequest, target) -> URLRequest in
@@ -287,7 +287,7 @@ let provider = AccountAPI.adapter(plugins: [requestPlugin])
 也可以统一进行配置：
 
 ```swift
-Configuration.te.setup(timeoutIntervalForRequest: 20,
+Configuration.terra.setup(timeoutIntervalForRequest: 20,
                                responsePattern: pattern,
                                msgDisplayer: { (msg, msgType, onView) in
                                 
@@ -406,20 +406,20 @@ extension NetworkLoggerPlugin {
 
 ```swift
 // 开启网络监听
-NetStateMonitor.te.startMonitoring()
+NetStateMonitor.terra.startMonitoring()
 // 关闭网络监听
-NetStateMonitor.te.stopMonitoring()
+NetStateMonitor.terra.stopMonitoring()
 ```
 
 #### 状态监听
 
 ```swift
 // 1 Block
-NetStateMonitor.te.addObserver(self) { (networkType, isReachable) in
+NetStateMonitor.terra.addObserver(self) { (networkType, isReachable) in
 	// handle
 	print("networkType:\(networkType) isReachable: \(isReachable)")
 }
-NetStateMonitor.te.notify(observer: self) { (networkType, isReachable) in
+NetStateMonitor.terra.notify(observer: self) { (networkType, isReachable) in
 
 }
  

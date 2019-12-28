@@ -16,17 +16,17 @@ public struct Terra<Base> {
 
 public protocol TerraCompatible {
     associatedtype Base
-    static var te: Terra<Base>.Type { get set }
-    var te: Terra<Base> { get set }
+    static var terra: Terra<Base>.Type { get set }
+    var terra: Terra<Base> { get set }
 }
 
 extension TerraCompatible {
-    public static var te: Terra<Self>.Type {
+    public static var terra: Terra<Self>.Type {
         get { return Terra<Self>.self }
         set { }
     }
     
-    public var te: Terra<Self> {
+    public var terra: Terra<Self> {
         get { return Terra(self) }
         set { }
     }
