@@ -11,6 +11,7 @@ import Terra
 import Moya
 import ObjectMapper
 import RxSwift
+import ReactiveSwift
 
 enum AccountAPI {
     case login(account: String, password: String)
@@ -79,9 +80,31 @@ class ViewController: UIViewController {
             // Reload UI with account
         }
         
-        login().subscribe { (event) in
-            print(event.element.debugDescription)
+        provider.rx.requestModel(Account.self, token: .logout(account: ""))
+            .asObservable()
+            .takeLast(1)
+            .observeOn(MainScheduler.instance)
+            .subscribe { (event) in
+                print(event.debugDescription)
         }.disposed(by: disposeBag)
+        
+        provider.rx.requestModel(Account.self, token: .logout(account: "xx"))
+            .subscribe(onSuccess: { (account) in
+                print(account)
+        }) { (error) in
+            print(error.localizedDescription)
+        }.disposed(by: disposeBag)
+        
+        provider.reactive.requestModel(Account.self, token: .logout(account: ""))
+            .start { [weak self] (event) in
+                switch event {
+                case .value(let account):
+                    print(account.toJSON().debugDescription)
+                case .failed(let error):
+                    error.display(on: self?.view)
+                default: break
+                }
+        }
     }
     
     func login(completion: @escaping (Account) -> Void) {
@@ -97,9 +120,6 @@ class ViewController: UIViewController {
             }
         }
     }
-    
-    func login() -> Observable<Account> {
-        return provider.rx.requestModel(.login(account: "xx", password:"xx"))
-    }
+
 }
 

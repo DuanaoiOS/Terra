@@ -9,6 +9,7 @@ import Foundation
 import Moya
 import ObjectMapper
 import RxSwift
+import ReactiveSwift
 
 // MARK: Typealias Of Completion
 public typealias TerraMapperCompletion<T: BaseMappable> = (_ result: Result<T, MoyaError>) -> Void
@@ -125,80 +126,59 @@ extension Terra where Base: MoyaProviderType {
 }
 
 // MARK: Rx Extensions Of Request
-public extension Reactive where Base: MoyaProviderType {
-    
-    //  Observable
-    
-    func requestModel<T: BaseMappable>(_ token: Base.Target,
-                                       keyPath: BodyKeyPath = .default,
-                                       callbackQueue: DispatchQueue? = nil) -> Observable<T> {
-        if !keyPath.keyPath.isEmpty {
-            return request(token, callbackQueue: callbackQueue)
-                .asObservable()
-                .takeLast(1)
-                .mapObject(T.self, atKeyPath: keyPath.keyPath)
-                .observeOn(MainScheduler.instance)
-        }
-        return request(token, callbackQueue: callbackQueue)
-            .asObservable()
-            .takeLast(1)
-            .mapObject(T.self)
-            .observeOn(MainScheduler.instance)
-    }
-    
-    func requestModelList<T: BaseMappable>(_ token: Base.Target,
-                                           keyPath: BodyKeyPath = .default,
-                                           callbackQueue: DispatchQueue? = nil) -> Observable<[T]> {
-        if !keyPath.keyPath.isEmpty {
-            return request(token, callbackQueue: callbackQueue)
-                .asObservable()
-                .takeLast(1)
-                .mapArray(T.self, atKeyPath: keyPath.keyPath)
-                .observeOn(MainScheduler.instance)
-        }
-        return request(token, callbackQueue: callbackQueue)
-            .asObservable()
-            .takeLast(1)
-            .mapArray(T.self)
-            .observeOn(MainScheduler.instance)
-    }
-    
-    func requestModel<T: Decodable>(_ token: Base.Target,
-                                    keyPath: BodyKeyPath = .default,
-                                    callbackQueue: DispatchQueue? = nil) -> Observable<T> {
-        return request(token, callbackQueue: callbackQueue)
-            .asObservable()
-            .takeLast(1)
-            .map(T.self, atKeyPath: keyPath.keyPath)
-            .observeOn(MainScheduler.instance)
-    }
-    
+public extension RxSwift.Reactive where Base: MoyaProviderType {
+        
     //  Single
     
-    func requestModel<T: BaseMappable>(_ token: Base.Target,
+    func requestModel<T: BaseMappable>(_ type: T.Type,
+                                       token: Base.Target,
                                        keyPath: BodyKeyPath = .default,
                                        callbackQueue: DispatchQueue? = nil) -> Single<T> {
-        return requestModel(token,
-                            keyPath: keyPath,
-                            callbackQueue: callbackQueue)
-            .asSingle()
+        return request(token, callbackQueue: callbackQueue)
+            .mapObject(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestModelList<T: BaseMappable>(_ token: Base.Target,
+    func requestModelList<T: BaseMappable>(_ type: T.Type,
+                                           token: Base.Target,
                                            keyPath: BodyKeyPath = .default,
                                            callbackQueue: DispatchQueue? = nil) -> Single<[T]> {
-        return requestModelList(token,
-                                keyPath: keyPath,
-                                callbackQueue: callbackQueue)
-            .asSingle()
+        return request(token, callbackQueue: callbackQueue)
+            .mapArray(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestModel<T: Decodable>(_ token: Base.Target,
+    func requestModel<T: Decodable>(_ type: T.Type,
+                                    token: Base.Target,
                                     keyPath: BodyKeyPath = .default,
                                     callbackQueue: DispatchQueue? = nil) -> Single<T> {
-        return requestModel(token,
-                            keyPath: keyPath,
-                            callbackQueue: callbackQueue)
-            .asSingle()
+        return request(token, callbackQueue: callbackQueue)
+            .map(T.self, atKeyPath: keyPath.keyPath)
+    }
+}
+
+// MARK: ReactiveSwift Extensions Of Request
+public extension ReactiveSwift.Reactive where Base: MoyaProviderType {
+    
+    func requestModel<T: BaseMappable>(_ type: T.Type,
+                                       token: Base.Target,
+                                       keyPath: BodyKeyPath = .default,
+                                       callbackQueue: DispatchQueue? = nil) -> SignalProducer<T, MoyaError> {
+        return request(token, callbackQueue: callbackQueue)
+            .mapObject(T.self, atKeyPath: keyPath.keyPath)
+    }
+    
+    func requestModelList<T: BaseMappable>(_ type: T.Type,
+                                           token: Base.Target,
+                                           keyPath: BodyKeyPath = .default,
+                                           callbackQueue: DispatchQueue? = nil) -> SignalProducer<[T], MoyaError> {
+        return request(token, callbackQueue: callbackQueue)
+            .mapArray(T.self, atKeyPath: keyPath.keyPath)
+    }
+    
+    func requestModel<T: Decodable>(_ type: T.Type,
+                                    token: Base.Target,
+                                    keyPath: BodyKeyPath = .default,
+                                    callbackQueue: DispatchQueue? = nil) -> SignalProducer<T, MoyaError> {
+        return request(token, callbackQueue: callbackQueue)
+            .map(T.self, atKeyPath: keyPath.keyPath)
     }
 }

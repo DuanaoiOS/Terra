@@ -27,7 +27,7 @@ pod 'Terra'
 
 ### 快速使用
 
-* 定义一个API类型，推荐使用Enum
+定义一个API类型，推荐使用Enum
 
 ```swift
 enum AccountAPI {
@@ -36,7 +36,7 @@ enum AccountAPI {
 }
 ```
 
-* 进行请求配置，扩展API类型，实现TargetType 协议。
+进行请求配置，扩展API类型，实现TargetType 协议。
 
 ```swift
 extension AccountAPI: TargetType {
@@ -76,7 +76,7 @@ extension AccountAPI: TargetType {
 }
 ```
 
-* 初始化一个`MoyaProvider`,   **Terra** 可以通过`TargetType`适配器方法获取Provider实例， 默认提供了相关解析插件
+初始化一个`MoyaProvider`,   **Terra** 可以通过`TargetType`适配器方法获取Provider实例， 默认提供了相关解析插件
 
 ```swift
 let provider = AccountAPI.adapter()
@@ -88,7 +88,7 @@ let provider = AccountAPI.adapter()
 let provider = MoyaProvider<AccountAPI>()
 ```
 
-* 定义数据模型 ，**Terra**支持了`BaseMappable`以及`Codable`类型的自动解析
+定义数据模型 ，**Terra**支持了`BaseMappable`以及`Codable`类型的自动解析
 
 ```swift
 struct Account: ImmutableMappable {
@@ -107,7 +107,11 @@ struct Account: ImmutableMappable {
 }
 ```
 
-* 使用`provider`进行网络请求，**Terra**支持Callback和Rx的方式
+使用`provider`进行网络请求，**Terra**支持
+
+* Callback
+* RxSwift
+* ReactiveSwift
 
 ```swift
 // Callback 
@@ -126,19 +130,34 @@ provider.te.requestModel(Account.self,
 
 ```swift
 // RxSwift
-func login() -> Observable<Account> {
-    return provider.rx.requestModel(.login(account: "xx", password:"xx"))
+provider.rx.requestModel(Account.self, token: .logout(account: ""))
+    .asObservable()
+    .takeLast(1)
+    .observeOn(MainScheduler.instance)
+    .subscribe { (event) in
+        print(event.debugDescription)
+}.disposed(by: disposeBag)
+        
+provider.rx.requestModel(Account.self, token: .logout(account: "xx"))
+    .subscribe(onSuccess: { (account) in
+        print(account)
+}) { (error) in
+    print(error.localizedDescription)
+}.disposed(by: disposeBag)
+```
+
+```swift
+// ReactiveSwift
+provider.reactive.requestModel(Account.self, token: .logout(account: ""))
+    .start { [weak self] (event) in
+        switch event {
+        case .value(let account):
+            print(account.toJSON().debugDescription)
+        case .failed(let error):
+            error.display(on: self?.view)
+        default: break
+        }
 }
-
-// 1
-login().subscribe { (event) in
-        print(event.element.debugDescription)
-    }.disposed(by: disposeBag)
-
-// 2
-login().subscribe(onNext: { (account) in
-            print(account.toJSONString(prettyPrint: true))
-        })
 ```
 
 
