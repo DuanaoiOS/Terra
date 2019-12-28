@@ -230,39 +230,23 @@ Configuration.terra.setup { (msg, msgType, onView) in
 }
 ```
 
-#### 服务端响应数据匹配
+#### 服务端响应数据自定义解析
 
 ```swift
 /// Response format 
 public protocol ResponsePattern {
-    var bodyKeyPath: String { get set }
-    func verifier(response: Moya.Response) -> Bool?
-    func errorContent(in reponse: Moya.Response) -> ServerErrorContent?
-}
+    typealias KeyPathType = [String]
+    var codeKeyPath: KeyPathType {get}
+    var messageKeyPath: KeyPathType {get}
+    var messageTypeKeyPath: KeyPathType {get}
+    var resultBodyKeyPath: KeyPathType {get}
 
-public static func setup(pattern: ResponsePattern) {
-    Configuration.default.responsePattern = pattern
-}
-
-/// 遵循协议
-struct DefaultResponsePattern: ResponsePattern { 
-  /// 数据内容的Key
-    var bodyKeyPath: String = "data"
-    /// 验证是否为成功响应
-    func verifier(response: Response) -> Bool? {
-        guard let code = logicCode(response: response) else { return nil }
-        return code == successCodeValue
-    }
-    /// 解析服务端标准错误内容
-    func errorContent(in response: Response) -> ServerErrorContent? {
-        guard let code = logicCode(response: response),
-              code != successCodeValue else {return nil }
-        let content = ServerErrorContent(code: code,
-                                         message: message(response: response),
-                                         messageType: messageType(response: response),
-                                         response: response)
-        return content
-    }
+    var responseIsSuccess: (_ response: Moya.Response) -> Bool {get}
+    var codeValue: (_ response: Moya.Response) -> Int? {get}
+    var messageValue: (_ response: Moya.Response) -> String? {get}
+    var messageTypeValue: (_ response: Moya.Response) -> ServerErrorContent.MessageType? {get}
+    
+    var errorContent: (_ response: Moya.Response) -> ServerErrorContent? {get}
 }
 ```
 

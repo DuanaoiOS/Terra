@@ -40,34 +40,46 @@ public struct ServerErrorContent {
 /// Enum of business error
 public enum BusinessError: Swift.Error {
     case server(content: ServerErrorContent)
+    case unkown
 }
 
 extension BusinessError {
     
-    internal var content: ServerErrorContent {
+    internal var content: ServerErrorContent? {
         switch self {
         case let .server(content): return content
+        case .unkown: return nil
         }
     }
 
-    public var code: Int {
-        return content.code
+    public var code: Int? {
+        return content?.code
     }
     
     public var message: String? {
-        return content.message
+        return content?.message
     }
     
     public var messageType: ServerErrorContent.MessageType {
-        return content.messageType ?? .none
+        return content?.messageType ?? .none
     }
     
     public var response: Moya.Response? {
-        return content.response
+        return content?.response
     }
     
     public var localizedDescription: String {
-        return content.message ?? "error occurred:\(content.code)"
+        switch self {
+        case .server(let content):
+            return content.message ?? "error occurred:\(content.code)"
+        default:
+            return "error occurred: unkown"
+        }
+    }
+    
+    public func display(on view: UIView? = nil) {
+        Configuration.default
+            .msgDisplayer?(localizedDescription, messageType, view)
     }
 }
 
@@ -85,8 +97,11 @@ extension MoyaError {
 // extension of display error
 extension MoyaError {
     public func display(on view: UIView? = nil) {
-        let messgae = errorDescription ?? localizedDescription
-        let messageType = businessError?.messageType
-        Configuration.default.msgDisplayer?(messgae, messageType, view)
+        if let business = businessError {
+            business.display(on: view)
+        } else {
+            let messgae = errorDescription ?? localizedDescription
+            Configuration.default.msgDisplayer?(messgae, .toast, view)
+        }
     }
 }

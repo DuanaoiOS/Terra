@@ -30,7 +30,7 @@ public final class Configuration {
     fileprivate(set) var dnsParser: DNSParser?
     fileprivate(set) var signer: Signer?
     
-    fileprivate(set) var responsePattern: ResponsePattern = DefaultResponsePattern()
+    fileprivate(set) var responsePattern: ResponsePattern = DefaultPattern()
     public internal(set) lazy var plugins: [PluginType] = [
         SignaturePlugin(),
         DNSPlugin(),

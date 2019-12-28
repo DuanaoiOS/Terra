@@ -36,7 +36,8 @@ public enum BodyKeyPath {
     var keyPath: String {
         switch self {
         case .default:
-            return Configuration.default.responsePattern.bodyKeyPath
+            return Configuration.default
+                .responsePattern.resultBodyKeyPath.keyPath
         case .custom(let keyPath):
             return keyPath
         }

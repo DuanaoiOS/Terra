@@ -15,28 +15,24 @@ public extension Moya.Response {
         return Configuration.default.responsePattern
     }
     
-    internal var bodyKey: String {
-        return responsePattern.bodyKeyPath
-    }
-    
     internal var logicCode: Int? {
-        return responsePattern.errorContent(in: self)?.code
+        return responsePattern.codeValue(self)
     }
     
     internal var message: String? {
-        return responsePattern.errorContent(in: self)?.message
+        return responsePattern.messageValue(self)
     }
     
     internal var messageType: ServerErrorContent.MessageType? {
-        return responsePattern.errorContent(in: self)?.messageType
+        return responsePattern.messageTypeValue(self)
     }
     
     var bodyDictionaryObject: [String: Any]? {
-        return dataJSON?[bodyKey].dictionaryObject
+        return dataJSON?[responsePattern.resultBodyKeyPath].dictionaryObject
     }
     
     var bodyArrayObject: [Any]? {
-        return dataJSON?[bodyKey].arrayObject
+        return dataJSON?[responsePattern.resultBodyKeyPath].arrayObject
     }
     
     internal var dataJSON: JSON? {

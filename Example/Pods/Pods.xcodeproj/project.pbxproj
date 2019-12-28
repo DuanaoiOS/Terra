@@ -111,7 +111,7 @@
 		53791F5E5F07400F92CFDFC89A432305 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F35FB34912EDFE1A6FC5C984534B6E3 /* Validation.swift */; };
 		53C341186B099D7DB999E13C93573047 /* Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0FDA1D06A7B3B3069F0224A5AE421A /* Timeout.swift */; };
 		53F5E5A6DFB7ED6F26979D361D77F8BE /* Pods-Terra_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B87D7CAEF0050DB998E3AE344DB9ADF /* Pods-Terra_Example-dummy.m */; };
-		5450BA6A6826640F2CD639E9BE09DD45 /* ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626C6282570302B1E86B2FC525E4AF6E /* ServerResponse.swift */; };
+		5450BA6A6826640F2CD639E9BE09DD45 /* ResponsePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626C6282570302B1E86B2FC525E4AF6E /* ResponsePattern.swift */; };
 		54E234D685766C1E83646250A8813477 /* Single+Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086F46C38DEA56A2A0D4CE05A7D028C4 /* Single+Response.swift */; };
 		553CF23D91DC8777B26191C77938004A /* NSDecimalNumberTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70FFE60E578F5F2BAFEA63D2E17D000 /* NSDecimalNumberTransform.swift */; };
 		56186450D8382DF65B7B6406A3672E0C /* ServerResponsePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5434ED159E6D309DACF3C562E0EAC /* ServerResponsePlugin.swift */; };
@@ -554,7 +554,7 @@
 		6129DEEBB7A928EBEAA64A899D1A1A03 /* Dematerialize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Dematerialize.swift; path = RxSwift/Observables/Dematerialize.swift; sourceTree = "<group>"; };
 		61B413B7BFDD1FBDB91589AC49E3DE39 /* ReactiveSwift.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ReactiveSwift.xcconfig; sourceTree = "<group>"; };
 		6201BACEBCD07024094265682EC0D3F8 /* Pods_Terra_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Terra_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		626C6282570302B1E86B2FC525E4AF6E /* ServerResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerResponse.swift; sourceTree = "<group>"; };
+		626C6282570302B1E86B2FC525E4AF6E /* ResponsePattern.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ResponsePattern.swift; sourceTree = "<group>"; };
 		62DE343B33CE99BBE3E7CBFA8C539143 /* Reactive.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Reactive.swift; path = RxSwift/Reactive.swift; sourceTree = "<group>"; };
 		6377ED0C25AE58C889D8C08D1C422DF3 /* ReactiveSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ReactiveSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		655A1538B4A392AE8D1540ED9961148F /* Never.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Never.swift; path = RxSwift/Observables/Never.swift; sourceTree = "<group>"; };
@@ -1382,7 +1382,7 @@
 				CC72FE5CE006CBDB0EA79CD494400A1E /* RequestPreparePlugin.swift */,
 				F9492D6491EEB75BCE1D4FCE1C27B3AD /* Response+JSON.swift */,
 				83E12ACF2F2ED5BB06675F83E644FB9F /* ResultParserPlugin.swift */,
-				626C6282570302B1E86B2FC525E4AF6E /* ServerResponse.swift */,
+				626C6282570302B1E86B2FC525E4AF6E /* ResponsePattern.swift */,
 				D4D5434ED159E6D309DACF3C562E0EAC /* ServerResponsePlugin.swift */,
 				C170936D5BC314245B5ADB3E7D4B7323 /* SignaturePlugin.swift */,
 				8890B3626F64AE5DDEF9C77960D1D052 /* TargetTypeAddable.swift */,
@@ -2046,7 +2046,7 @@
 				6052ECFB23B5FE630024755B /* Plugins.swift in Sources */,
 				12A257562F69C5998D41DECB61F09B1A /* Response+ObjectMapper.swift in Sources */,
 				5C5F7E43A9623D9A02AFD03CC4535F0A /* ResultParserPlugin.swift in Sources */,
-				5450BA6A6826640F2CD639E9BE09DD45 /* ServerResponse.swift in Sources */,
+				5450BA6A6826640F2CD639E9BE09DD45 /* ResponsePattern.swift in Sources */,
 				56186450D8382DF65B7B6406A3672E0C /* ServerResponsePlugin.swift in Sources */,
 				5B23E5F17B15FB58BB6C98C7EC248EA9 /* SignalProducer+ObjectMapper.swift in Sources */,
 				258F9BD29684173072C69245BF7C2AAD /* SignaturePlugin.swift in Sources */,
