@@ -52,8 +52,14 @@ protocol NetStatusService {
 }
 
 public class NetStateMonitor: NetStatusService {
-    public var observers: NSHashTable<AnyObject>
-    public var accessType: NetworkType = .notReachable {
+    
+    public static let `default` = NetStateMonitor()
+    private let networkInfo = CTTelephonyNetworkInfo()
+    private let cellularData = CTCellularData.init()
+    fileprivate let reachabilityManager = NetworkReachabilityManager()
+
+    public private(set) var observers: NSHashTable<AnyObject>
+    public private(set) var accessType: NetworkType = .notReachable {
         didSet {
             if oldValue != accessType {
                 NotificationCenter.default
@@ -62,7 +68,7 @@ public class NetStateMonitor: NetStatusService {
             }
         }
     }
-    public var isReachable: Bool = false {
+    public private(set) var isReachable: Bool = false {
         didSet {
             if oldValue != isReachable {
                 NotificationCenter.default
@@ -75,18 +81,13 @@ public class NetStateMonitor: NetStatusService {
         }
     }
     
-    private let reachabilityManager = NetworkReachabilityManager()
-    private let networkInfo = CTTelephonyNetworkInfo()
-    private let cellularData = CTCellularData.init()
-    public static let `default` = NetStateMonitor()
-    
     private init() {
         observers = NSHashTable(options: .weakMemory)
         guard let manager = reachabilityManager else { return }
         accessType = self.accessTypeFor(connection: manager.networkReachabilityStatus)
     }
     
-    public func addObserver(_ observer: AnyObject, _ block: @escaping NetStatusCallback) {
+    internal func addObserver(_ observer: AnyObject, _ block: @escaping NetStatusCallback) {
         objc_setAssociatedObject(observer,
                                  &associatedObjectKey, block,
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -94,11 +95,11 @@ public class NetStateMonitor: NetStatusService {
         block(self.accessType, self.isReachable)
     }
     
-    public func notify(observer: AnyObject, callback: @escaping NetStatusCallback) {
+    fileprivate func notify(observer: AnyObject, callback: @escaping NetStatusCallback) {
         self.addObserver(observer, callback)
     }
     
-    private func updateNetwork(connection: NetworkReachabilityManager.NetworkReachabilityStatus) {
+    fileprivate func updateNetwork(connection: NetworkReachabilityManager.NetworkReachabilityStatus) {
         self.accessType = accessTypeFor(connection: connection)
         let observers = self.observers.allObjects
         for observer in observers {
@@ -130,19 +131,6 @@ public class NetStateMonitor: NetStatusService {
         case .unknown, .notReachable:
             return .notReachable
         }
-    }
-}
-
-// MARK: - Monitoring
-public extension NetStateMonitor {
-    
-    class func startMonitoring() {
-        NetStateMonitor.default.reachabilityManager?.startListening()
-        NetStateMonitor.default.reachabilityManager?.listener = { NetStateMonitor.default.updateNetwork(connection: $0) }
-    }
-    
-    class func stopMonitoring() {
-        NetStateMonitor.default.reachabilityManager?.stopListening()
     }
 }
 
@@ -181,5 +169,31 @@ extension CTTelephonyNetworkInfo {
         default: type = .unknown
         }
         return type
+    }
+}
+
+extension NetStateMonitor: TerraCompatible {}
+
+extension Terra where Base: NetStateMonitor {
+    
+    // MARK: - Monitoring
+    
+    public static func startMonitoring() {
+        NetStateMonitor.default.reachabilityManager?.startListening()
+        NetStateMonitor.default.reachabilityManager?.listener = { NetStateMonitor.default.updateNetwork(connection: $0) }
+    }
+    
+     public static func stopMonitoring() {
+        NetStateMonitor.default.reachabilityManager?.stopListening()
+    }
+    
+     // MARK: - Observer
+    
+    public static func addObserver(_ observer: AnyObject, _ block: @escaping NetStatusCallback) {
+        NetStateMonitor.default.addObserver(observer, block)
+    }
+    
+    public static func notify(observer: AnyObject, callback: @escaping NetStatusCallback) {
+        NetStateMonitor.default.notify(observer: observer, callback: callback)
     }
 }

@@ -12,12 +12,13 @@ import Moya
 import ObjectMapper
 import RxSwift
 
-enum API {
+enum AccountAPI {
     case login(account: String, password: String)
     case logout(account: String)
 }
 
-extension API: TargetType {
+extension AccountAPI: TargetType {
+    
     var baseURL: URL {
         return URL(string: "https://www.google.com")!
     }
@@ -69,7 +70,7 @@ struct Account: ImmutableMappable {
 
 class ViewController: UIViewController {
     
-    let provider = API.adapter()
+    let provider = AccountAPI.adapter()
     let disposeBag = DisposeBag()
     
     private func fetchData() {

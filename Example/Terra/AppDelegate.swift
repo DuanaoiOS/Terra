@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Terra
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,8 +16,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        // 应用开启网络监听
+        NetStateMonitor.te.startMonitoring()
+        // 应用关闭网络监听
+        NetStateMonitor.te.stopMonitoring()
+        
+        NetStateMonitor.te.addObserver(self) { (networkType, isReachable) in
+            
+        }
+        NetStateMonitor.te.notify(observer: self) { (networkType, isReachable) in
+            
+        }
+        
+        NotificationCenter.default
+            .addObserver(self,
+                         selector: #selector(networkNotification(_:)),
+                         name: NSNotification.Name.netStatusDidChange,
+                         object: nil)
+        
         return true
+    }
+    
+    @objc func networkNotification(_ notification: Notification) {
+        
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
