@@ -61,12 +61,10 @@ extension Terra where Base: MoyaProviderType {
                     let keyPath = keyPath.keyPath
                     let model = try (keyPath.isEmpty ? response.mapObject(T.self) : response.mapObject(T.self, atKeyPath: keyPath))
                     completion(.success(model))
+                } catch let error where error is MoyaError {
+                    completion(.failure(error as! MoyaError))
                 } catch {
-                    if error is MoyaError {
-                        completion(.failure(error as! MoyaError))
-                    } else {
-                        completion(.failure(.underlying(error, response)))
-                    }
+                    completion(.failure(.underlying(error, response)))
                 }
             case .failure(let error):
                 completion(.failure(error))
@@ -88,12 +86,10 @@ extension Terra where Base: MoyaProviderType {
                     let keyPath = keyPath.keyPath
                     let modelList = try (keyPath.isEmpty ? response.mapArray(T.self) : response.mapArray(T.self, atKeyPath: keyPath))
                     completion(.success(modelList))
+                } catch let error where error is MoyaError {
+                    completion(.failure(error as! MoyaError))
                 } catch {
-                    if error is MoyaError {
-                        completion(.failure(error as! MoyaError))
-                    } else {
-                        completion(.failure(.underlying(error, response)))
-                    }
+                    completion(.failure(.underlying(error, response)))
                 }
             case .failure(let error):
                 completion(.failure(error))
@@ -116,12 +112,10 @@ extension Terra where Base: MoyaProviderType {
                     let keyPath = keyPath.keyPath
                     let model = try response.map(T.self, atKeyPath: keyPath)
                     completion(.success(model))
+                } catch let error where error is MoyaError {
+                    completion(.failure(error as! MoyaError))
                 } catch {
-                    if error is MoyaError {
-                        completion(.failure(error as! MoyaError))
-                    } else {
-                        completion(.failure(.underlying(error, response)))
-                    }
+                    completion(.failure(.underlying(error, response)))
                 }
             case .failure(let error):
                 completion(.failure(error))
