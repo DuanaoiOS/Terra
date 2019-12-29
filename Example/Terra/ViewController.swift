@@ -9,117 +9,79 @@
 import UIKit
 import Terra
 import Moya
-import ObjectMapper
 import RxSwift
 import ReactiveSwift
 
-enum AccountAPI {
-    case login(account: String, password: String)
-    case logout(account: String)
-}
-
-extension AccountAPI: TargetType {
-    
-    var baseURL: URL {
-        return URL(string: "https://www.google.com")!
-    }
-    
-    var path: String {
-        switch self {
-        case .login:
-            return "/account/login"
-        case .logout:
-            return "/account/logout"
-        }
-    }
-    
-    var method: Moya.Method {
-        return .post
-    }
-    
-    var task: Moya.Task {
-        var parameters = [String: Any]()
-        switch self {
-        case let .login(account, password):
-            parameters["account"] = account
-            parameters["password"] = password
-        case let .logout(account):
-            parameters["account"] = account
-        }
-        return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
-    }
-    
-    var headers: [String : String]? {
-        return [:]
-    }
-}
-
-struct Account: ImmutableMappable {
-    
-    var userID: String
-    var name: String?
-    var phone: String?
-    var gender: Int?
-    
-    init(map: Map) throws {
-        userID = try map.value("id")
-        name = try? map.value("name")
-        phone = try? map.value("phone")
-        gender = try? map.value("gender")
-    }
-}
-
 class ViewController: UIViewController {
     
-    let provider = AccountAPI.adapter()
+    private var repos = [Repository]()
+    
     let disposeBag = DisposeBag()
     
-    private func fetchData() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        login { (account) in
-            // Reload UI with account
+        rxDownloadRepositories("DuanaoiOS")
+            .subscribe(onNext: { (repos) in
+                self.repos = repos
+            }, onError: { (error) in
+                print(error.localizedDescription)
+            }).disposed(by: disposeBag)
+        
+        reactDownloadRepositories("DuanaoiOS").start { (event) in
+            switch event {
+            case .value(let repos):
+                self.repos = repos
+            case .failed(let error):
+                error.display(on: self.view)
+            default: break
+            }
         }
-        
-        provider.rx.requestModel(Account.self, token: .logout(account: ""))
-            .asObservable()
-            .takeLast(1)
-            .observeOn(MainScheduler.instance)
-            .subscribe { (event) in
-                print(event.debugDescription)
-        }.disposed(by: disposeBag)
-        
-        provider.rx.requestModel(Account.self, token: .logout(account: "xx"))
-            .subscribe(onSuccess: { (account) in
-                print(account)
-        }) { (error) in
-            print(error.localizedDescription)
-        }.disposed(by: disposeBag)
-        
-        provider.reactive.requestModel(Account.self, token: .logout(account: ""))
-            .start { [weak self] (event) in
-                switch event {
-                case .value(let account):
-                    print(account.toJSON().debugDescription)
-                case .failed(let error):
-                    error.display(on: self?.view)
-                default: break
+    }
+    
+    fileprivate func showAlert(_ title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func downloadRepositories(_ username: String) {
+        gitHubProvider.terra
+            .requestModelList(Repository.self, target: .userRepositories(username)) { [weak self] (result) in
+                guard let `self` = self else {return}
+                switch result {
+                case .success(let repos):
+                    self.repos = repos
+                case .failure(let error):
+                    error.display(on: self.view)
                 }
         }
     }
     
-    func login(completion: @escaping (Account) -> Void) {
-        provider.terra.requestModel(Account.self,
-                                 target: .login(account: "xx", password:"xx"))
-        { [weak self] (result) in
-            switch result {
-            case .success(let account):
-                print(account.toJSON().debugDescription)
-                completion(account)
-            case .failure(let error):
-                error.display(on: self?.view)
+    func rxDownloadRepositories(_ username: String) -> Observable<[Repository]> {
+        return gitHubProvider.rx
+            .requestModelList(Repository.self, token: .userRepositories(username))
+            .asObservable()
+            .take(1)
+            .observeOn(MainScheduler.instance)
+    }
+    
+    func reactDownloadRepositories(_ username: String) -> SignalProducer<[Repository], MoyaError> {
+        return gitHubProvider.reactive
+            .requestModelList(Repository.self, token: .userRepositories(username))
+            .take(last: 1)
+            .observe(on: QueueScheduler.main)
+    }
+    
+    func downloadZen() {
+        gitHubProvider.terra.requestString(.zen, keyPath: .custom("")) { result in
+            var message = "Couldn't access API"
+            if case let .success(response) = result {
+                message = response
             }
+            self.showAlert("Zen", message: message)
         }
     }
-
 }
 

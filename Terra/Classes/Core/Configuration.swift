@@ -8,91 +8,63 @@
 import Foundation
 import Moya
 
+/// Display error
+public typealias MessageDisplayer = (_ message: String,
+                                    _ messageType: ServerErrorContent.MessageType?,
+                                    _ onView: UIView?) -> Void
+/// Special error code handle
+public typealias ErrorHandler = (_ error: BusinessError) -> Void
+/// DNS parser
+public typealias DNSParser = (_ host: String) -> String
+/// Signature
+public typealias Signer = (_ signData: Data) -> String?
+
+public let defaultTimeoutInterval: TimeInterval = 30
+
 /// User-defined
-public final class Configuration {
+final class Configuration {
         
-    public static let `default`: Configuration = Configuration()
+    static let `default`: Configuration = Configuration()
     private init() {}
-    
-    /// Display error
-    public typealias MessageDisplayer = (_ message: String,
-                                        _ messageType: ServerErrorContent.MessageType?,
-                                        _ onView: UIView?) -> Void
-    /// Special error code handle
-    public typealias ErrorHandler = (_ error: BusinessError) -> Void
-    /// DNS parser
-    public typealias DNSParser = (_ host: String) -> String
-    /// Signature
-    public typealias Signer = (_ signData: Data) -> String?
     
     fileprivate(set) var msgDisplayer: MessageDisplayer?
     fileprivate(set) var errorHandler: ErrorHandler?
     fileprivate(set) var dnsParser: DNSParser?
     fileprivate(set) var signer: Signer?
     
+    fileprivate(set) var timeoutIntervalForRequest = defaultTimeoutInterval
     fileprivate(set) var responsePattern: ResponsePattern = DefaultPattern()
-    public internal(set) lazy var plugins: [PluginType] = [
+    fileprivate(set) lazy var plugins: [PluginType] = [
         SignaturePlugin(),
         DNSPlugin(),
         ServerResponsePlugin(),
         RequestPreparePlugin.timeoutSettings()
     ]
-    
-    public static let defaultTimeoutInterval: TimeInterval = 20
-    public internal(set) var timeoutIntervalForRequest = Configuration.defaultTimeoutInterval
 }
 
-extension Configuration: TerraCompatible {}
-
-extension Terra where Base: Configuration {
+public extension Terra {
     
-    public static func setup(dnsParser: @escaping Configuration.DNSParser) {
+    static func setup(dnsParser: @escaping DNSParser) {
         Configuration.default.dnsParser = dnsParser
     }
     
-    public static func setup(signer: @escaping Configuration.Signer) {
+    static func setup(signer: @escaping Signer) {
         Configuration.default.signer = signer
     }
     
-    public static func setup(errorHandler: @escaping Configuration.ErrorHandler) {
+    static func setup(errorHandler: @escaping ErrorHandler) {
         Configuration.default.errorHandler = errorHandler
     }
     
-    public static func setup(messageDisplayer: @escaping Configuration.MessageDisplayer) {
+    static func setup(messageDisplayer: @escaping MessageDisplayer) {
         Configuration.default.msgDisplayer = messageDisplayer
     }
     
-    public static func setup(pattern: ResponsePattern) {
+    static func setup(pattern: ResponsePattern) {
         Configuration.default.responsePattern = pattern
     }
     
-    public static func setup(timeoutIntervalForRequest: TimeInterval) {
+    static func setup(timeoutIntervalForRequest: TimeInterval) {
         Configuration.default.timeoutIntervalForRequest = timeoutIntervalForRequest
-    }
-    
-    
-    public static func setup(
-                    timeoutIntervalForRequest: TimeInterval = Configuration.defaultTimeoutInterval,
-                    responsePattern: ResponsePattern? = nil,
-                    msgDisplayer: Configuration.MessageDisplayer? = nil,
-                    errorHandler: Configuration.ErrorHandler? = nil,
-                    dnsParser: Configuration.DNSParser? = nil,
-                    signer: Configuration.Signer? = nil) {
-        Configuration.default.timeoutIntervalForRequest = timeoutIntervalForRequest
-        if let pattern = responsePattern {
-            Configuration.default.responsePattern = pattern
-        }
-        if let msgDisplayer = msgDisplayer {
-            Configuration.default.msgDisplayer = msgDisplayer
-        }
-        if let errorHandler = errorHandler {
-            Configuration.default.errorHandler = errorHandler
-        }
-        if let dnsParser = dnsParser {
-            Configuration.default.dnsParser = dnsParser
-        }
-        if let signer = signer {
-            Configuration.default.signer = signer
-        }
     }
 }

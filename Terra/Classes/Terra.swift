@@ -15,14 +15,15 @@ import ReactiveSwift
 public typealias TerraMapperCompletion<T: BaseMappable> = (_ result: Result<T, MoyaError>) -> Void
 public typealias TerraMapperListCompletion<T: BaseMappable> = (_ result: Result<[T], MoyaError>) -> Void
 public typealias TerraCodableCompletion<T: Decodable> = (_ result: Result<T, MoyaError>) -> Void
+public typealias TerraStringCompletion = (_ result: Result<String, MoyaError>) -> Void
 
 extension MoyaProvider: TerraCompatible {}
 
 // MARK: Convenience Adapter
 
 extension TargetType {
-    public static func adapter(plugins: [PluginType] = Configuration.default.plugins) -> MoyaProvider<Self> {
-        return MoyaProvider<Self>(plugins: plugins)
+    public static func adapter(plugins: [PluginType] = []) -> MoyaProvider<Self> {
+        return MoyaProvider<Self>(plugins: Configuration.default.plugins + plugins)
     }
 }
 
@@ -46,7 +47,7 @@ public enum BodyKeyPath {
 
 // MARK: Terra Extensions Of Request
 
-extension Terra where Base: MoyaProviderType {
+extension TerraWrapper where Base: MoyaProviderType {
     
     @discardableResult
     public func requestModel<T: BaseMappable>( _ type: T.Type,
@@ -113,6 +114,31 @@ extension Terra where Base: MoyaProviderType {
                 do {
                     let keyPath = keyPath.keyPath
                     let model = try response.map(T.self, atKeyPath: keyPath)
+                    completion(.success(model))
+                } catch let error where error is MoyaError {
+                    completion(.failure(error as! MoyaError))
+                } catch {
+                    completion(.failure(.underlying(error, response)))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    @discardableResult
+    public func requestString( _ target: Base.Target,
+                               keyPath: BodyKeyPath? = nil,
+                               callbackQueue: DispatchQueue? = nil,
+                               progress: Moya.ProgressBlock? = nil,
+                               completion: @escaping TerraStringCompletion) -> Cancellable {
+        
+        return base.request(target, callbackQueue: callbackQueue, progress: progress) { (result) in
+            switch result {
+            case .success(let response):
+                do {
+                    let keyPath = keyPath?.keyPath
+                    let model = try response.mapString(atKeyPath: keyPath)
                     completion(.success(model))
                 } catch let error where error is MoyaError {
                     completion(.failure(error as! MoyaError))

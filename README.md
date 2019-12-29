@@ -30,48 +30,59 @@ pod 'Terra'
 定义一个API类型，推荐使用Enum
 
 ```swift
-enum AccountAPI {
-    case login(account: String, password: String)
-    case logout(account: String)
+public enum GitHub {
+    case zen
+    case userProfile(String)
+    case userRepositories(String)
 }
 ```
 
 进行请求配置，扩展API类型，实现TargetType 协议。
 
 ```swift
-extension AccountAPI: TargetType {
-    
-    var baseURL: URL {
-        return URL(string: "https://www.google.com")!
-    }
-    
-    var path: String {
+extension GitHub: TargetType {
+    public var baseURL: URL { return URL(string: "https://api.github.com")! }
+    public var path: String {
         switch self {
-        case .login:
-            return "/account/login"
-        case .logout:
-            return "/account/logout"
+        case .zen:
+            return "/zen"
+        case .userProfile(let name):
+            return "/users/\(name.urlEscaped)"
+        case .userRepositories(let name):
+            return "/users/\(name.urlEscaped)/repos"
         }
     }
-    
-    var method: Moya.Method {
-        return .post
+    public var method: Moya.Method {
+        return .get
     }
-    
-    var task: Moya.Task {
-        var parameters = [String: Any]()
+    public var task: Task {
         switch self {
-        case let .login(account, password):
-            parameters["account"] = account
-            parameters["password"] = password
-        case let .logout(account):
-            parameters["account"] = account
+        case .userRepositories:
+            return .requestParameters(parameters: ["sort": "pushed"], encoding: URLEncoding.default)
+        default:
+            return .requestPlain
         }
-        return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
     }
-    
-    var headers: [String : String]? {
-        return [:]
+    public var validationType: ValidationType {
+        switch self {
+        case .zen:
+            return .successCodes
+        default:
+            return .none
+        }
+    }
+    public var sampleData: Data {
+        switch self {
+        case .zen:
+            return "Half measures are as bad as nothing at all.".data(using: String.Encoding.utf8)!
+        case .userProfile(let name):
+            return "{\"login\": \"\(name)\", \"id\": 100}".data(using: String.Encoding.utf8)!
+        case .userRepositories(let name):
+            return "[{\"name\": \"\(name)\"}]".data(using: String.Encoding.utf8)!
+        }
+    }
+    public var headers: [String: String]? {
+        return nil
     }
 }
 ```
@@ -79,31 +90,39 @@ extension AccountAPI: TargetType {
 初始化一个`MoyaProvider`,   **Terra** 可以通过`TargetType`适配器方法获取Provider实例， 默认提供了相关解析插件
 
 ```swift
-let provider = AccountAPI.adapter()
+let gitHubProvider = GitHub.adapter(plugins: [NetworkLoggerPlugin.plugin()])
 ```
 
 当然直接初始化也是没问题的
 
 ```swift
-let provider = MoyaProvider<AccountAPI>()
+let gitHubProvider = MoyaProvider<GitHub>()
 ```
 
 定义数据模型 ，**Terra**支持了`BaseMappable`以及`Codable`类型的自动解析
 
 ```swift
-struct Account: ImmutableMappable {
-    
-    var userID: String
-    var name: String?
-    var phone: String?
-    var gender: Int?
-    
-    init(map: Map) throws {
-        userID = try map.value("id")
-        name = try? map.value("name")
-        phone = try? map.value("phone")
-        gender = try? map.value("gender")
-    }
+struct Repository: ImmutableMappable {
+  var keysURL: String
+  var statusesURL: String
+  var issuesURL: String
+  var defaultBranch: String
+  var issueEventsURL: String?
+  var id: Int
+  var owner: Owner
+  /**
+  ....
+  
+  */
+  init(map: Map) {
+    keysURL = (try? map.value("keys_url")) ?? ""
+    statusesURL = (try? map.value("statuses_url")) ?? ""
+    issuesURL = (try? map.value("issues_url")) ?? ""
+    defaultBranch = (try? map.value("default_branch")) ?? ""
+    issueEventsURL = (try? map.value("issues_events_url")) ?? ""
+    id = try! map.value("id")
+    owner = try! map.value("owner")
+  }
 }
 ```
 
@@ -115,48 +134,56 @@ struct Account: ImmutableMappable {
 
 ```swift
 // Callback 
-provider.terra.requestModel(Account.self,
-                                 target: .login(account: "xx", password:"xx"))
-        { [weak self] (result) in
-            switch result {
-            case .success(let account):
-                print(account.toJSON().debugDescription)
-                completion(account)
-            case .failure(let error):
-                error.display(on: self?.view)
-            }
+func downloadRepositories(_ username: String) {
+        gitHubProvider.terra
+            .requestModelList(Repository.self, target: .userRepositories(username)) {
+              [weak self] (result) in
+                guard let `self` = self else {return}
+                switch result {
+                case .success(let repos):
+                    self.repos = repos
+                case .failure(let error):
+                    error.display(on: self.view)
+                }
         }
+    }
 ```
 
 ```swift
 // RxSwift
-provider.rx.requestModel(Account.self, token: .logout(account: ""))
-    .asObservable()
-    .takeLast(1)
-    .observeOn(MainScheduler.instance)
-    .subscribe { (event) in
-        print(event.debugDescription)
-}.disposed(by: disposeBag)
+func downloadRepositories(_ username: String) -> Observable<[Repository]> {
+    return gitHubProvider.rx
+        .requestModelList(Repository.self, token: .userRepositories(username))
+        .asObservable()
+        .take(1)
+        .observeOn(MainScheduler.instance)
+}
         
-provider.rx.requestModel(Account.self, token: .logout(account: "xx"))
-    .subscribe(onSuccess: { (account) in
-        print(account)
-}) { (error) in
-    print(error.localizedDescription)
-}.disposed(by: disposeBag)
+rxDownloadRepositories("DuanaoiOS")
+            .subscribe(onNext: { (repos) in
+                self.repos = repos
+            }, onError: { (error) in
+                print(error.localizedDescription)
+            }).disposed(by: disposeBag)
 ```
 
 ```swift
 // ReactiveSwift
-provider.reactive.requestModel(Account.self, token: .logout(account: ""))
-    .start { [weak self] (event) in
-        switch event {
-        case .value(let account):
-            print(account.toJSON().debugDescription)
-        case .failed(let error):
-            error.display(on: self?.view)
-        default: break
-        }
+func reactDownloadRepositories(_ username: String) -> SignalProducer<[Repository], MoyaError> {
+    return gitHubProvider.reactive
+        .requestModelList(Repository.self, token: .userRepositories(username))
+        .take(last: 1)
+        .observe(on: QueueScheduler.main)
+}
+
+reactDownloadRepositories("DuanaoiOS").start { (event) in
+    switch event {
+    case .value(let repos):
+        self.repos = repos
+    case .failed(let error):
+        error.display(on: self.view)
+    default: break
+    }
 }
 ```
 

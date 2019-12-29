@@ -174,7 +174,7 @@ extension CTTelephonyNetworkInfo {
 
 extension NetStateMonitor: TerraCompatible {}
 
-extension Terra where Base: NetStateMonitor {
+extension TerraWrapper where Base: NetStateMonitor {
     
     // MARK: - Monitoring
     

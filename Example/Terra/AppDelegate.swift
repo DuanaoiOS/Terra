@@ -19,14 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 应用开启网络监听
         NetStateMonitor.terra.startMonitoring()
-        // 应用关闭网络监听
-        NetStateMonitor.terra.stopMonitoring()
         
         NetStateMonitor.terra.addObserver(self) { (networkType, isReachable) in
-            
+            print("current network type is \(networkType), network is \(isReachable)")
         }
         NetStateMonitor.terra.notify(observer: self) { (networkType, isReachable) in
-            
+            print("current network type is \(networkType), network is \(isReachable)")
         }
         
         NotificationCenter.default
@@ -34,7 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                          selector: #selector(networkNotification(_:)),
                          name: NSNotification.Name.netStatusDidChange,
                          object: nil)
-        
         return true
     }
     
@@ -48,8 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        // 应用关闭网络监听
+        NetStateMonitor.terra.stopMonitoring()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
