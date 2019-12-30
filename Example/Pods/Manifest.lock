@@ -17,7 +17,7 @@ PODS:
   - Result (4.1.0)
   - RxSwift (4.5.0)
   - SwiftyJSON (5.0.0)
-  - Terra (0.0.1):
+  - Terra (1.0.0):
     - Moya (~> 13.0)
     - Moya/ReactiveSwift (~> 13.0)
     - Moya/RxSwift (~> 13.0)
@@ -49,7 +49,7 @@ SPEC CHECKSUMS:
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
   RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
-  Terra: c3daa4b8464843ead936d0ec23e942eee0e1cdc4
+  Terra: b9a5b8a7d030f51adedf9b51edac22268f7d149e
 
 PODFILE CHECKSUM: 5e4978b416c1242dc7a6a43c70e8cc55f1e4bf77
 

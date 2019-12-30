@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Terra'
-  s.version          = '0.0.1'
+  s.version          = '1.0.0'
   s.summary          = '网络层框架'
   s.description      = '可灵活定制，高扩展性，基于Moya的网络组件'
 
