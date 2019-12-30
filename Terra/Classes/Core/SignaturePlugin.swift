@@ -8,10 +8,10 @@
 import Foundation
 import Moya
 
-/// 用于签名
-final class SignaturePlugin: PluginType {
+/// Signature for Params
+public final class SignaturePlugin: PluginType {
 
-    // MARK: 修改发送请求
+    // MARK: Modify URLRequest
     public func prepare(_ request: URLRequest, target: TargetType) -> URLRequest {
         switch target.task {
         case .requestParameters(let parameters, _):
@@ -21,12 +21,6 @@ final class SignaturePlugin: PluginType {
         }
     }
     
-    /// 为参数添加签名
-    ///
-    /// - Parameters:
-    ///   - urlRequest: 原始请求实例
-    ///   - parameters: 参数
-    /// - Returns: 签名后的参数
     private func addSignatureToRequest(_ urlRequest: URLRequest, with parameters: [String: Any]?) -> URLRequest {
         guard let parameters = parameters else { return urlRequest }
         var targetRequest = urlRequest

@@ -48,6 +48,12 @@ extension PrimitiveSequence where TraitType == SingleTrait, ElementType == Respo
                     return Single.just(try response.mapArray(type, atKeyPath: keyPath, context: context))
                 }
     }
+    
+    public func mapArray<T: Decodable>(_ type: T.Type, atKeyPath keyPath: String) -> Single<[T]> {
+        return flatMap { response -> Single<[T]> in
+                    return Single.just(try response.mapArray(type, atKeyPath: keyPath))
+                }
+    }
 }
 
 

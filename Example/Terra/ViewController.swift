@@ -9,49 +9,79 @@
 import UIKit
 import Terra
 import Moya
-
-enum API {
-    case one
-}
-
-extension API: TargetType {
-    var baseURL: URL {
-        return URL(string: "https://www.google.com")!
-    }
-    
-    var path: String {
-        return ""
-    }
-    
-    var method: Moya.Method {
-        return .post
-    }
-    
-    var sampleData: Data {
-        return Data()
-    }
-    
-    var task: Moya.Task {
-        return .requestPlain
-    }
-    
-    var headers: [String : String]? {
-        return [:]
-    }
-}
+import RxSwift
+import ReactiveSwift
 
 class ViewController: UIViewController {
-
+    
+    private var repos = [Repository]()
+    
+    let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        API.adapter()
+        rxDownloadRepositories("DuanaoiOS")
+            .subscribe(onNext: { (repos) in
+                self.repos = repos
+            }, onError: { (error) in
+                print(error.localizedDescription)
+            }).disposed(by: disposeBag)
+        
+        reactDownloadRepositories("DuanaoiOS").start { (event) in
+            switch event {
+            case .value(let repos):
+                self.repos = repos
+            case .failed(let error):
+                error.display(on: self.view)
+            default: break
+            }
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    fileprivate func showAlert(_ title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
     }
-
+    
+    func downloadRepositories(_ username: String) {
+        gitHubProvider.terra
+            .requestModelList(Repository.self, target: .userRepositories(username)) { [weak self] (result) in
+                guard let `self` = self else {return}
+                switch result {
+                case .success(let repos):
+                    self.repos = repos
+                case .failure(let error):
+                    error.display(on: self.view)
+                }
+        }
+    }
+    
+    func rxDownloadRepositories(_ username: String) -> Observable<[Repository]> {
+        return gitHubProvider.rx
+            .requestModelList(Repository.self, token: .userRepositories(username))
+            .asObservable()
+            .take(1)
+            .observeOn(MainScheduler.instance)
+    }
+    
+    func reactDownloadRepositories(_ username: String) -> SignalProducer<[Repository], MoyaError> {
+        return gitHubProvider.reactive
+            .requestModelList(Repository.self, token: .userRepositories(username))
+            .take(last: 1)
+            .observe(on: QueueScheduler.main)
+    }
+    
+    func downloadZen() {
+        gitHubProvider.terra.requestString(.zen, keyPath: .custom("")) { result in
+            var message = "Couldn't access API"
+            if case let .success(response) = result {
+                message = response
+            }
+            self.showAlert("Zen", message: message)
+        }
+    }
 }
 

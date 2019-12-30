@@ -40,6 +40,12 @@ extension SignalProducerProtocol where Value == Moya.Response, Error == MoyaErro
             return unwrapThrowable { try response.mapArray(type, atKeyPath: keyPath, context: context) }
         }
     }
+    
+    public func mapArray<T: Decodable>(_ type: T.Type, atKeyPath keyPath: String) -> SignalProducer<[T], MoyaError> {
+        return producer.flatMap(.latest) { (response: Response) -> SignalProducer<[T], Error> in
+            return unwrapThrowable { try response.mapArray(type, atKeyPath: keyPath) }
+        }
+    }
 }
 
 /// Maps throwable to SignalProducer

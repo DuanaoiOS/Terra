@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Terra<Base> {
+public struct TerraWrapper<Base> {
     public let base: Base
     public init(_ base: Base) {
         self.base = base
@@ -16,18 +16,20 @@ public struct Terra<Base> {
 
 public protocol TerraCompatible {
     associatedtype Base
-    static var te: Terra<Base>.Type { get set }
-    var te: Terra<Base> { get set }
+    static var terra: TerraWrapper<Base>.Type { get set }
+    var terra: TerraWrapper<Base> { get set }
 }
 
 extension TerraCompatible {
-    public static var te: Terra<Self>.Type {
-        get { return Terra<Self>.self }
+    public static var terra: TerraWrapper<Self>.Type {
+        get { return TerraWrapper<Self>.self }
         set { }
     }
     
-    public var te: Terra<Self> {
-        get { return Terra(self) }
+    public var terra: TerraWrapper<Self> {
+        get { return TerraWrapper(self) }
         set { }
     }
 }
+
+public struct Terra {}

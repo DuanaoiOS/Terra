@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6052ED0123B842150024755B /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052ECFF23B842150024755B /* Repository.swift */; };
+		6052ED0223B842150024755B /* Owner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052ED0023B842150024755B /* Owner.swift */; };
+		6052ED0623B843A90024755B /* GiphyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052ED0423B843A90024755B /* GiphyAPI.swift */; };
+		6052ED0723B843A90024755B /* GitHubUserContentAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052ED0523B843A90024755B /* GitHubUserContentAPI.swift */; };
+		6052ED0C23B847170024755B /* GitHubAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052ED0B23B847170024755B /* GitHubAPI.swift */; };
+		6052ED0E23B877F30024755B /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052ED0923B844C70024755B /* Configuration.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -31,6 +37,12 @@
 		2E52E644E3907F3E2E950190 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		31C0CA65CBB74E3FEFF207BA /* Pods_Terra_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Terra_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E2DCCDA0E1FF34561C863FC /* Pods_Terra_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Terra_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6052ECFF23B842150024755B /* Repository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
+		6052ED0023B842150024755B /* Owner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Owner.swift; sourceTree = "<group>"; };
+		6052ED0423B843A90024755B /* GiphyAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyAPI.swift; sourceTree = "<group>"; };
+		6052ED0523B843A90024755B /* GitHubUserContentAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHubUserContentAPI.swift; sourceTree = "<group>"; };
+		6052ED0923B844C70024755B /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		6052ED0B23B847170024755B /* GitHubAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHubAPI.swift; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Terra_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Terra_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +92,33 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		6052ECFE23B842150024755B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6052ECFF23B842150024755B /* Repository.swift */,
+				6052ED0023B842150024755B /* Owner.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6052ED0323B8438D0024755B /* API */ = {
+			isa = PBXGroup;
+			children = (
+				6052ED0B23B847170024755B /* GitHubAPI.swift */,
+				6052ED0423B843A90024755B /* GiphyAPI.swift */,
+				6052ED0523B843A90024755B /* GitHubUserContentAPI.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		6052ED0823B844950024755B /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				6052ED0923B844C70024755B /* Configuration.swift */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -104,6 +143,9 @@
 		607FACD21AFB9204008FA782 /* Example for Terra */ = {
 			isa = PBXGroup;
 			children = (
+				6052ED0823B844950024755B /* Configuration */,
+				6052ED0323B8438D0024755B /* API */,
+				6052ECFE23B842150024755B /* Model */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -346,7 +388,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				6052ED0723B843A90024755B /* GitHubUserContentAPI.swift in Sources */,
+				6052ED0623B843A90024755B /* GiphyAPI.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				6052ED0223B842150024755B /* Owner.swift in Sources */,
+				6052ED0123B842150024755B /* Repository.swift in Sources */,
+				6052ED0E23B877F30024755B /* Configuration.swift in Sources */,
+				6052ED0C23B847170024755B /* GitHubAPI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

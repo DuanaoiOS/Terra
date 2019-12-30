@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-/// 用于解析Result
+/// Result Modifier
 public final class ResultParserPlugin: PluginType {
     
     public typealias ProcessResultClosure = (_ result: Result<Response, MoyaError>, _ target: TargetType) -> Result<Response, MoyaError>
@@ -18,7 +18,7 @@ public final class ResultParserPlugin: PluginType {
         self.processResultClosure = processResultClosure
     }
 
-    // MARK: 处理响应数据
+    // MARK: Called to modify a result before completion.
     public func process(_ result: Result<Response, MoyaError>, target: TargetType) -> Result<Response, MoyaError> {
        return processResultClosure(result, target)
     }

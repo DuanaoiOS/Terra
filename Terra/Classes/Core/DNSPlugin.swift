@@ -8,19 +8,13 @@
 import Foundation
 import Moya
 
-/// 用于签名
-final class DNSPlugin: PluginType {
+public final class DNSPlugin: PluginType {
 
-    // MARK: 修改发送请求
     public func prepare(_ request: URLRequest, target: TargetType) -> URLRequest {
-        return parseDNS(forRequest: request)
+        return parseDNS(for: request)
     }
     
-    /// DNS解析
-    ///
-    /// - Parameter request：解析请求DNS
-    /// - Returns: 解析结果
-    private func parseDNS(forRequest request: URLRequest) -> URLRequest {
+    private func parseDNS(for request: URLRequest) -> URLRequest {
         var targetRequest = request
         if let originalHost = request.url?.host,
             let ip = Configuration.default.dnsParser?(originalHost) {
