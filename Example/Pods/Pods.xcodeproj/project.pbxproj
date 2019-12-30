@@ -127,6 +127,7 @@
 		602EF385202D1EF45260C22BBBE54535 /* RequestPreparePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC72FE5CE006CBDB0EA79CD494400A1E /* RequestPreparePlugin.swift */; };
 		6052ECFB23B5FE630024755B /* Plugins.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052ECFA23B5FE630024755B /* Plugins.swift */; };
 		60811924021AB50BBAA585467A0358DF /* Never.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655A1538B4A392AE8D1540ED9961148F /* Never.swift */; };
+		60C2099223B9CFA4007FBE06 /* Response+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C2099123B9CFA4007FBE06 /* Response+Codable.swift */; };
 		60F18DAFD493B448FB0799315F29E526 /* NetworkActivityPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97482D398EAB9795D252354677E23F03 /* NetworkActivityPlugin.swift */; };
 		6171EC18CAC62269321313814224FBB3 /* RxSwift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 186BFE5A6D1C4FFDD0CF5AB183EEA707 /* RxSwift-dummy.m */; };
 		62A59FD06736BB059638486E043C3663 /* SchedulerServices+Emulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DFAEF756AF25B18526B12BFD3E1F42A /* SchedulerServices+Emulation.swift */; };
@@ -551,6 +552,7 @@
 		5F36DABD38D6CE3724322DD5EA620E23 /* Result.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F9BEC9C7DC2189BD37DF3A0AE908951 /* Request.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Request.swift; path = Source/Request.swift; sourceTree = "<group>"; };
 		6052ECFA23B5FE630024755B /* Plugins.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plugins.swift; sourceTree = "<group>"; };
+		60C2099123B9CFA4007FBE06 /* Response+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Response+Codable.swift"; sourceTree = "<group>"; };
 		6129DEEBB7A928EBEAA64A899D1A1A03 /* Dematerialize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Dematerialize.swift; path = RxSwift/Observables/Dematerialize.swift; sourceTree = "<group>"; };
 		61B413B7BFDD1FBDB91589AC49E3DE39 /* ReactiveSwift.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ReactiveSwift.xcconfig; sourceTree = "<group>"; };
 		6201BACEBCD07024094265682EC0D3F8 /* Pods_Terra_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Terra_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1483,6 +1485,7 @@
 				42C33DE102B3ECBDAE3A3D21167B9A9B /* Response+ObjectMapper.swift */,
 				31364DAF02E74E3B0E84C70481E91038 /* ReactiveSwift */,
 				2DAD18BA991C56258215792CB1283551 /* RxSwift */,
+				60C2099123B9CFA4007FBE06 /* Response+Codable.swift */,
 			);
 			name = Mapper;
 			path = Terra/Classes/Mapper;
@@ -2051,6 +2054,7 @@
 				5B23E5F17B15FB58BB6C98C7EC248EA9 /* SignalProducer+ObjectMapper.swift in Sources */,
 				258F9BD29684173072C69245BF7C2AAD /* SignaturePlugin.swift in Sources */,
 				5EB73939A7F4AEA105A7DEBF9154EE2E /* Single+ObjectMapper.swift in Sources */,
+				60C2099223B9CFA4007FBE06 /* Response+Codable.swift in Sources */,
 				EDDF3C5E677FBB990348A552F906BE69 /* TargetTypeAddable.swift in Sources */,
 				8580ED2CB4C77CC5DD628351B6144BD1 /* Terra-dummy.m in Sources */,
 				4870D04880982A585841596C595050CC /* Terra.swift in Sources */,

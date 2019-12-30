@@ -135,18 +135,18 @@ struct Repository: ImmutableMappable {
 ```swift
 // Callback 
 func downloadRepositories(_ username: String) {
-        gitHubProvider.terra
-            .requestModelList(Repository.self, target: .userRepositories(username)) {
-              [weak self] (result) in
-                guard let `self` = self else {return}
-                switch result {
-                case .success(let repos):
-                    self.repos = repos
-                case .failure(let error):
-                    error.display(on: self.view)
-                }
-        }
+    gitHubProvider.terra
+        .requestModelList(Repository.self, target: .userRepositories(username)) {
+          [weak self] (result) in
+            guard let `self` = self else {return}
+            switch result {
+            case .success(let repos):
+                self.repos = repos
+            case .failure(let error):
+                error.display(on: self.view)
+            }
     }
+}
 ```
 
 ```swift
