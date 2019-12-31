@@ -18,7 +18,7 @@ public final class ServerResponsePlugin: PluginType {
                 return result
             }
             guard let content = pattern.errorContent(response) else {
-                return .failure(.underlying(BusinessError.unkown, response))
+                return .failure(.underlying(BusinessError.unkown(response), response))
             }
             let error = BusinessError.server(content: content)
             Configuration.default.errorHandler?(error)
