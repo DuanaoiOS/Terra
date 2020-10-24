@@ -1,11 +1,12 @@
 # Terra
 
-Lightweight network request service layer based on Moya.
-
 [![CI Status](https://img.shields.io/travis/DATree/Terra.svg?style=flat)](https://travis-ci.org/DATree/Terra)
 [![Version](https://img.shields.io/cocoapods/v/Terra.svg?style=flat)](https://cocoapods.org/pods/Terra)
 [![License](https://img.shields.io/cocoapods/l/Terra.svg?style=flat)](https://cocoapods.org/pods/Terra)
 [![Platform](https://img.shields.io/cocoapods/p/Terra.svg?style=flat)](https://cocoapods.org/pods/Terra)
+
+Lightweight network request service layer based on Moya.
+
 
 ## Example
 
