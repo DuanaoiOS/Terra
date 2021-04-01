@@ -52,12 +52,12 @@ public enum BodyKeyPath {
 extension TerraWrapper where Base: MoyaProviderType {
     
     @discardableResult
-    public func requestModel<T: BaseMappable>( _ type: T.Type,
-                                               target: Base.Target,
-                                               keyPath: BodyKeyPath = .default,
-                                               callbackQueue: DispatchQueue? = nil,
-                                               progress: Moya.ProgressBlock? = nil,
-                                               completion: @escaping TerraMapperCompletion<T>) -> Cancellable {
+    public func model<T: BaseMappable>( _ type: T.Type,
+                                        target: Base.Target,
+                                        keyPath: BodyKeyPath = .default,
+                                        callbackQueue: DispatchQueue? = nil,
+                                        progress: Moya.ProgressBlock? = nil,
+                                        completion: @escaping TerraMapperCompletion<T>) -> Cancellable {
         
         return base.request(target, callbackQueue: callbackQueue, progress: progress) { (result) in
             switch result {
@@ -78,19 +78,19 @@ extension TerraWrapper where Base: MoyaProviderType {
     }
     
     @discardableResult
-    public func requestModelList<T: BaseMappable>( _ type: T.Type,
-                                                   target: Base.Target,
-                                                   keyPath: BodyKeyPath = .default,
-                                                   callbackQueue: DispatchQueue? = nil,
-                                                   progress: Moya.ProgressBlock? = nil,
-                                                   completion: @escaping TerraMapperListCompletion<T>) -> Cancellable {
+    public func modelArray<T: BaseMappable>( _ type: T.Type,
+                                             target: Base.Target,
+                                             keyPath: BodyKeyPath = .default,
+                                             callbackQueue: DispatchQueue? = nil,
+                                             progress: Moya.ProgressBlock? = nil,
+                                             completion: @escaping TerraMapperListCompletion<T>) -> Cancellable {
         return base.request(target, callbackQueue: callbackQueue, progress: progress) { (result) in
             switch result {
             case .success(let response):
                 do {
                     let keyPath = keyPath.keyPath
-                    let modelList = try (keyPath.isEmpty ? response.mapArray(T.self) : response.mapArray(T.self, atKeyPath: keyPath))
-                    completion(.success(modelList))
+                    let modelArray = try (keyPath.isEmpty ? response.mapArray(T.self) : response.mapArray(T.self, atKeyPath: keyPath))
+                    completion(.success(modelArray))
                 } catch let error where error is MoyaError {
                     completion(.failure(error as! MoyaError))
                 } catch {
@@ -103,12 +103,12 @@ extension TerraWrapper where Base: MoyaProviderType {
     }
     
     @discardableResult
-    public func requestModel<T: Decodable>( _ type: T.Type,
-                                            target: Base.Target,
-                                            keyPath: BodyKeyPath = .default,
-                                            callbackQueue: DispatchQueue? = nil,
-                                            progress: Moya.ProgressBlock? = nil,
-                                            completion: @escaping TerraCodableCompletion<T>) -> Cancellable {
+    public func model<T: Decodable>( _ type: T.Type,
+                                     target: Base.Target,
+                                     keyPath: BodyKeyPath = .default,
+                                     callbackQueue: DispatchQueue? = nil,
+                                     progress: Moya.ProgressBlock? = nil,
+                                     completion: @escaping TerraCodableCompletion<T>) -> Cancellable {
         
         return base.request(target, callbackQueue: callbackQueue, progress: progress) { (result) in
             switch result {
@@ -129,12 +129,12 @@ extension TerraWrapper where Base: MoyaProviderType {
     }
     
     @discardableResult
-    public func requestModelList<T: Decodable>( _ type: T.Type,
-                                            target: Base.Target,
-                                            keyPath: BodyKeyPath = .default,
-                                            callbackQueue: DispatchQueue? = nil,
-                                            progress: Moya.ProgressBlock? = nil,
-                                            completion: @escaping TerraCodableListCompletion<T>) -> Cancellable {
+    public func modelArray<T: Decodable>( _ type: T.Type,
+                                          target: Base.Target,
+                                          keyPath: BodyKeyPath = .default,
+                                          callbackQueue: DispatchQueue? = nil,
+                                          progress: Moya.ProgressBlock? = nil,
+                                          completion: @escaping TerraCodableListCompletion<T>) -> Cancellable {
         
         return base.request(target, callbackQueue: callbackQueue, progress: progress) { (result) in
             switch result {
@@ -154,11 +154,11 @@ extension TerraWrapper where Base: MoyaProviderType {
     }
     
     @discardableResult
-    public func requestString( _ target: Base.Target,
-                               keyPath: BodyKeyPath? = nil,
-                               callbackQueue: DispatchQueue? = nil,
-                               progress: Moya.ProgressBlock? = nil,
-                               completion: @escaping TerraStringCompletion) -> Cancellable {
+    public func string( _ target: Base.Target,
+                        keyPath: BodyKeyPath? = nil,
+                        callbackQueue: DispatchQueue? = nil,
+                        progress: Moya.ProgressBlock? = nil,
+                        completion: @escaping TerraStringCompletion) -> Cancellable {
         
         return base.request(target, callbackQueue: callbackQueue, progress: progress) { (result) in
             switch result {
@@ -184,41 +184,41 @@ public extension RxSwift.Reactive where Base: MoyaProviderType {
         
     //  Single
     
-    func requestModel<T: BaseMappable>(_ type: T.Type,
-                                       token: Base.Target,
-                                       keyPath: BodyKeyPath = .default,
-                                       callbackQueue: DispatchQueue? = nil) -> Single<T> {
+    func model<T: BaseMappable>(_ type: T.Type,
+                                token: Base.Target,
+                                keyPath: BodyKeyPath = .default,
+                                callbackQueue: DispatchQueue? = nil) -> Single<T> {
         return request(token, callbackQueue: callbackQueue)
             .mapObject(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestModelList<T: BaseMappable>(_ type: T.Type,
-                                           token: Base.Target,
-                                           keyPath: BodyKeyPath = .default,
-                                           callbackQueue: DispatchQueue? = nil) -> Single<[T]> {
+    func modelArray<T: BaseMappable>(_ type: T.Type,
+                                     token: Base.Target,
+                                     keyPath: BodyKeyPath = .default,
+                                     callbackQueue: DispatchQueue? = nil) -> Single<[T]> {
         return request(token, callbackQueue: callbackQueue)
             .mapArray(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestModel<T: Decodable>(_ type: T.Type,
-                                    token: Base.Target,
-                                    keyPath: BodyKeyPath = .default,
-                                    callbackQueue: DispatchQueue? = nil) -> Single<T> {
+    func model<T: Decodable>(_ type: T.Type,
+                             token: Base.Target,
+                             keyPath: BodyKeyPath = .default,
+                             callbackQueue: DispatchQueue? = nil) -> Single<T> {
         return request(token, callbackQueue: callbackQueue)
             .map(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestModelList<T: Decodable>(_ type: T.Type,
-                                           token: Base.Target,
-                                           keyPath: BodyKeyPath = .default,
-                                           callbackQueue: DispatchQueue? = nil) -> Single<[T]> {
+    func modelArray<T: Decodable>(_ type: T.Type,
+                                  token: Base.Target,
+                                  keyPath: BodyKeyPath = .default,
+                                  callbackQueue: DispatchQueue? = nil) -> Single<[T]> {
         return request(token, callbackQueue: callbackQueue)
             .mapArray(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestString(_ token: Base.Target,
-                       keyPath: BodyKeyPath = .default,
-                       callbackQueue: DispatchQueue? = nil) -> Single<String> {
+    func string(_ token: Base.Target,
+                keyPath: BodyKeyPath = .default,
+                callbackQueue: DispatchQueue? = nil) -> Single<String> {
         return request(token, callbackQueue: callbackQueue)
             .mapString(atKeyPath: keyPath.keyPath)
     }
@@ -227,41 +227,41 @@ public extension RxSwift.Reactive where Base: MoyaProviderType {
 // MARK: ReactiveSwift Extensions Of Request
 public extension ReactiveSwift.Reactive where Base: MoyaProviderType {
     
-    func requestModel<T: BaseMappable>(_ type: T.Type,
-                                       token: Base.Target,
-                                       keyPath: BodyKeyPath = .default,
-                                       callbackQueue: DispatchQueue? = nil) -> SignalProducer<T, MoyaError> {
+    func model<T: BaseMappable>(_ type: T.Type,
+                                token: Base.Target,
+                                keyPath: BodyKeyPath = .default,
+                                callbackQueue: DispatchQueue? = nil) -> SignalProducer<T, MoyaError> {
         return request(token, callbackQueue: callbackQueue)
             .mapObject(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestModelList<T: BaseMappable>(_ type: T.Type,
-                                           token: Base.Target,
-                                           keyPath: BodyKeyPath = .default,
-                                           callbackQueue: DispatchQueue? = nil) -> SignalProducer<[T], MoyaError> {
+    func modelArray<T: BaseMappable>(_ type: T.Type,
+                                     token: Base.Target,
+                                     keyPath: BodyKeyPath = .default,
+                                     callbackQueue: DispatchQueue? = nil) -> SignalProducer<[T], MoyaError> {
         return request(token, callbackQueue: callbackQueue)
             .mapArray(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestModel<T: Decodable>(_ type: T.Type,
-                                    token: Base.Target,
-                                    keyPath: BodyKeyPath = .default,
-                                    callbackQueue: DispatchQueue? = nil) -> SignalProducer<T, MoyaError> {
+    func model<T: Decodable>(_ type: T.Type,
+                             token: Base.Target,
+                             keyPath: BodyKeyPath = .default,
+                             callbackQueue: DispatchQueue? = nil) -> SignalProducer<T, MoyaError> {
         return request(token, callbackQueue: callbackQueue)
             .map(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestModelList<T: Decodable>(_ type: T.Type,
-                                           token: Base.Target,
-                                           keyPath: BodyKeyPath = .default,
-                                           callbackQueue: DispatchQueue? = nil) -> SignalProducer<[T], MoyaError> {
+    func modelArray<T: Decodable>(_ type: T.Type,
+                                  token: Base.Target,
+                                  keyPath: BodyKeyPath = .default,
+                                  callbackQueue: DispatchQueue? = nil) -> SignalProducer<[T], MoyaError> {
         return request(token, callbackQueue: callbackQueue)
             .mapArray(T.self, atKeyPath: keyPath.keyPath)
     }
     
-    func requestString(_ token: Base.Target,
-                       keyPath: BodyKeyPath = .default,
-                       callbackQueue: DispatchQueue? = nil) -> SignalProducer<String, MoyaError> {
+    func string(_ token: Base.Target,
+                keyPath: BodyKeyPath = .default,
+                callbackQueue: DispatchQueue? = nil) -> SignalProducer<String, MoyaError> {
         return request(token, callbackQueue: callbackQueue)
             .mapString(atKeyPath: keyPath.keyPath)
     }

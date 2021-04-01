@@ -48,7 +48,7 @@ class ViewController: UIViewController {
     
     func downloadRepositories(_ username: String) {
         gitHubProvider.terra
-            .requestModelList(Repository.self, target: .userRepositories(username)) { [weak self] (result) in
+            .modelArray(Repository.self, target: .userRepositories(username)) { [weak self] (result) in
                 guard let `self` = self else {return}
                 switch result {
                 case .success(let repos):
@@ -61,7 +61,7 @@ class ViewController: UIViewController {
     
     func rxDownloadRepositories(_ username: String) -> Observable<[Repository]> {
         return gitHubProvider.rx
-            .requestModelList(Repository.self, token: .userRepositories(username))
+            .modelArray(Repository.self, token: .userRepositories(username))
             .asObservable()
             .take(1)
             .observeOn(MainScheduler.instance)
@@ -69,13 +69,13 @@ class ViewController: UIViewController {
     
     func reactDownloadRepositories(_ username: String) -> SignalProducer<[Repository], MoyaError> {
         return gitHubProvider.reactive
-            .requestModelList(Repository.self, token: .userRepositories(username))
+            .modelArray(Repository.self, token: .userRepositories(username))
             .take(last: 1)
             .observe(on: QueueScheduler.main)
     }
     
     func downloadZen() {
-        gitHubProvider.terra.requestString(.zen, keyPath: .custom("")) { result in
+        gitHubProvider.terra.string(.zen, keyPath: .custom("")) { result in
             var message = "Couldn't access API"
             if case let .success(response) = result {
                 message = response

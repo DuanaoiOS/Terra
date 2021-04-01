@@ -40,7 +40,7 @@ public struct ServerErrorContent {
 /// Enum of business error
 public enum BusinessError: Swift.Error {
     case server(content: ServerErrorContent)
-    case unkown
+    case unkown(Moya.Response)
 }
 
 extension BusinessError {
@@ -53,27 +53,43 @@ extension BusinessError {
     }
 
     public var code: Int? {
-        return content?.code
+        switch self {
+        case let .server(content): return content.code
+        case .unkown: return NSURLErrorUnknown
+        }
     }
     
     public var message: String? {
-        return content?.message
+        switch self {
+        case let .server(content): return content.message
+        case .unkown: return "未知错误"
+        }
     }
     
     public var messageType: ServerErrorContent.MessageType {
-        return content?.messageType ?? .none
+        switch self {
+        case let .server(content):
+            return content.messageType ?? .none
+        case .unkown:
+            return .toast
+        }
     }
     
     public var response: Moya.Response? {
-        return content?.response
+        switch self {
+        case let .server(content):
+            return content.response
+        case let .unkown(response):
+            return response
+        }
     }
     
     public var localizedDescription: String {
         switch self {
         case .server(let content):
-            return content.message ?? "error occurred:\(content.code)"
+            return content.message ?? "发生错误:\(content.code)"
         default:
-            return "error occurred: unkown"
+            return "未知错误"
         }
     }
     

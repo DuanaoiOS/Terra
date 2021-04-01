@@ -5,6 +5,9 @@
 [![License](https://img.shields.io/cocoapods/l/Terra.svg?style=flat)](https://cocoapods.org/pods/Terra)
 [![Platform](https://img.shields.io/cocoapods/p/Terra.svg?style=flat)](https://cocoapods.org/pods/Terra)
 
+Lightweight network request service layer based on Moya.
+
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
