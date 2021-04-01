@@ -8,15 +8,15 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Terra'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = '网络层框架'
   s.description      = '可灵活定制，高扩展性，基于Moya的网络组件'
 
-  s.homepage         = 'http://47.244.69.238/iOS/core-components/Terra'
+  s.homepage         = 'https://github.com/DuanaoiOS/Terra'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'DATree' => 'aobaoaini@gmail.com' }
-  s.source           = { :git => 'http://47.244.69.238/iOS/core-components/Terra.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/DuanaoiOS/Terra.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '9.0'
